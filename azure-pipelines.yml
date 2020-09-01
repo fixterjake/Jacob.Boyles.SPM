@@ -4,7 +4,6 @@
 trigger:
 - master
 - develop
-- feature/*
 
 # Sets OS image to latest version of ubuntu.
 pool:
@@ -38,4 +37,4 @@ steps:
       displayName: "Upload Artifacts"
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: 'Jacob.Boyles.Management'
+        artifactName: 'Jacob.Boyles.SPM'
