@@ -3,8 +3,8 @@
 ### CPSC 498 Capstone Project by Jacob Boyles
 
 
-Master branch build status: [![Build Status](https://dev.azure.com/fixterjake0899/Capstone/_apis/build/status/Capstone?branchName=master)](https://dev.azure.com/fixterjake0899/Capstone/_build/latest?definitionId=9&branchName=master)
-Develop branch build status: [![Build Status](https://dev.azure.com/fixterjake0899/Capstone/_apis/build/status/Capstone?branchName=develop)](https://dev.azure.com/fixterjake0899/Capstone/_build/latest?definitionId=9&branchName=develop)
+Master branch build status: [![Build Status](https://dev.azure.com/fixterjake0899/Capstone/_apis/build/status/Capstone?branchName=master)](https://dev.azure.com/fixterjake0899/Capstone/_build/latest?definitionId=9&branchName=master)  
+Develop branch build status: [![Build Status](https://dev.azure.com/fixterjake0899/Capstone/_apis/build/status/Capstone?branchName=develop)](https://dev.azure.com/fixterjake0899/Capstone/_build/latest?definitionId=9&branchName=develop)  
 
 ## Project Overview
 
