@@ -16,7 +16,7 @@ It will also include permissions for adding members to sprints, items, and tasks
 
 ## Technologies
 
-Base Web Framework: [ASP.Net Core](https://dotnet.microsoft.com/apps/aspnet)
-Database Framework: [Entity Framework](https://docs.microsoft.com/en-us/ef/)
-User Management: [ASP.Net Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-3.1&tabs=visual-studio)
-Relational Database: [MySQL Server](https://dev.mysql.com/downloads/mysql/)
+Base Web Framework: [ASP.Net Core](https://dotnet.microsoft.com/apps/aspnet).  
+Database Framework: [Entity Framework](https://docs.microsoft.com/en-us/ef/).  
+User Management: [ASP.Net Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-3.1&tabs=visual-studio).  
+Relational Database: [MySQL Server](https://dev.mysql.com/downloads/mysql/).  
