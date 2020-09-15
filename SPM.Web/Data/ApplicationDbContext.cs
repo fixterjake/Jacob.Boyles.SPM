@@ -4,8 +4,9 @@ using System.Text;
 using Jacob.Boyles.SPM.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SPM.Web.Models;
 
-namespace Jacob.Boyles.Management.Data
+namespace SPM.Web.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
@@ -24,5 +25,7 @@ namespace Jacob.Boyles.Management.Data
         public DbSet<Task> Tasks { get; set; }
         public DbSet<TaskMember> TaskMembers { get; set; }
         public DbSet<TaskComment> TaskComments { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<TeamMember> TeamMembers { get; set; }
     }
 }

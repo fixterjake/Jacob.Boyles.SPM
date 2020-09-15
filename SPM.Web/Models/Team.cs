@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace SPM.Web.Models
 {
-    public class ItemComment
+    public class Team
     {
         [Key]
         public int Id { get; set; }
-        public int ItemId { get; set; }
-        public int MemberId { get; set; }
-        public string Comment { get; set; }
-        public DateTime Created { get; set; }
+        public string Name { get; set; }
+        public int CreatorId { get; set; }
     }
 }

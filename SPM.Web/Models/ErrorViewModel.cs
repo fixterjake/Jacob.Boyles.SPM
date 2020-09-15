@@ -1,6 +1,6 @@
 using System;
 
-namespace Jacob.Boyles.Management.Models
+namespace SPM.Web.Models
 {
     public class ErrorViewModel
     {

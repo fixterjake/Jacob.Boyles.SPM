@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Jacob.Boyles.Management.Models;
+using SPM.Web.Models;
 
-namespace Jacob.Boyles.Management.Controllers
+namespace SPM.Web.Controllers
 {
     public class HomeController : Controller
     {
