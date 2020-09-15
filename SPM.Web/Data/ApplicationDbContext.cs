@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Jacob.Boyles.SPM.Models;
+using SPM.Web.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SPM.Web.Models;
 
 namespace SPM.Web.Data
 {
