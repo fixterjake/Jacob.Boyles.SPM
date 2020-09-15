@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>aspnet-Jacob.Boyles.Management-ECA6728E-14AE-40F4-AE4F-3192C3EDA8F4</UserSecretsId>
+    <UserSecretsId>aspnet-SPM.Web-ECA6728E-14AE-40F4-AE4F-3192C3EDA8F4</UserSecretsId>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
   </PropertyGroup>
 
