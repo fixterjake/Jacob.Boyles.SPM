@@ -1,8 +1,65 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = "HomeLayout";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container secondary rounded box-shadow" style="padding-top: 20px; padding-bottom: 20px;">
+    <h2 class="text-center">Simple Project Management</h2>
 </div>
+
+<br />
+<br />
+
+<div class="container">
+    <div class="row text-center">
+        <div class="col-sm secondary rounded box-shadow margin-vertical" style="margin-right: 10px; padding-top: 20px; padding-bottom: 20px;">
+            <h3><i class="fas fa-chart-bar"></i> Features</h3>
+            <br />
+            The name says it all, SPM is your simple lightweight solution to your project management needs.
+        </div>
+        <div class="col-sm secondary rounded box-shadow margin-vertical" style="margin-left: 10px; padding-top: 20px;
+                                         padding-bottom: 20px;">
+            <h3><i class="fas fa-cogs"></i> Installation</h3>
+            <br />
+            A simple <b>docker pull</b>, any web server, and a mysql server and you'll be up and running in no time!
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+
+<div class="container secondary rounded box-shadow text-center justify-content-center" style="padding-top: 20px; padding-bottom: 20px;">
+    <h3><i class="fas fa-sitemap"></i> Releases and Dependencies</h3>
+    <br />
+    <table class="table table-borderless">
+        <tbody>
+            <tr class="border-bottom border-top border-dark">
+                <td>Releases</td>
+                <td>Docker or Github</td>
+            </tr>
+            <tr class="border-bottom border-dark">
+                <td>Docker</td>
+                <td>Download</td>
+            </tr>
+            <tr class="border-bottom border-dark">
+                <td>Web Server</td>
+                <td>Nginx or Apache</td>
+            </tr>
+            <tr>
+                <td>MySQL</td>
+                <td>Download</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<br />
+<br />
+
+<div class="container secondary rounded box-shadow text-center" style="margin-bottom: 100px; padding-top: 20px; padding-bottom: 20px;">
+    <h3><i class="fas fa-code-branch"></i> Contributing</h3>
+    <br />
+    This project is open source on github, feel free to contribute to this project.
+</div>
+
