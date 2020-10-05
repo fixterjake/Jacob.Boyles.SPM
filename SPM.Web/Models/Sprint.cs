@@ -23,26 +23,16 @@ namespace SPM.Web.Models
         /// <returns>String value of status</returns>
         public string GetStatusString()
         {
-            switch(Status)
+            return Status switch
             {
-                case SprintStatus.Inactive:
-                    return "Inactive";
-
-                case SprintStatus.Active:
-                    return "Active";
-
-                case SprintStatus.Extended:
-                    return "Extended";
-
-                case SprintStatus.Complete:
-                    return "Complete";
-
-                default: 
-                    throw new ArgumentOutOfRangeException();
-            }
+                SprintStatus.Inactive => "Inactive",
+                SprintStatus.Active => "Active",
+                SprintStatus.Extended => "Extended",
+                SprintStatus.Complete => "Complete",
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
     }
-
 
     public enum SprintStatus
     {

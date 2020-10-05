@@ -23,23 +23,14 @@ namespace SPM.Web.Models
         /// <returns>String value of status</returns>
         public string GetStatusString()
         {
-            switch (Status) 
+            return Status switch
             {
-                case ItemStatus.Pending:
-                    return "Pending";
-
-                case ItemStatus.InProgress:
-                    return "In Progress";
-
-                case ItemStatus.Blocked:
-                    return "Blocked";
-
-                case ItemStatus.Complete:
-                    return "Complete";
-
-                default:
-                    throw new ArgumentOutOfRangeException("");
-            }
+                ItemStatus.Pending => "Pending",
+                ItemStatus.InProgress => "In Progress",
+                ItemStatus.Blocked => "Blocked",
+                ItemStatus.Complete => "Complete",
+                _ => throw new ArgumentOutOfRangeException("")
+            };
         }
     }
 

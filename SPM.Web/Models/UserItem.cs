@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace SPM.Web.Models
 {
-    public class TaskMember
+    public class UserItem
     {
         [Key]
         public int Id { get; set; }
-        public int TaskId { get; set; }
-        public int MemberId { get; set; }
+        public int UserId { get; set; }
+        public int ItemId { get; set; }
+        public DateTime Created { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Jacob.Boyles.SPM.Areas.Identity.Pages.Account.Manage
+namespace SPM.Web.Areas.Identity.Pages.Account.Manage
 {
     public static class ManageNavPages
     {
