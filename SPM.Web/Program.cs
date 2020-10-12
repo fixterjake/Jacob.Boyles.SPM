@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using SPM.Web.Data;
 
 namespace SPM.Web
 {
@@ -13,7 +9,19 @@ namespace SPM.Web
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            // Build the host
+            var host = CreateHostBuilder(args).Build();
+
+            // Get the database service from the host
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<ApplicationDbContext>();
+
+            // Seed database with defautl data
+            SeedData.SeedSettings(context);
+
+            // Run host
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

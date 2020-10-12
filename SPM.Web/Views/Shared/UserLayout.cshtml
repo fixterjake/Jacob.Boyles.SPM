@@ -33,6 +33,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @await Html.PartialAsync("AlertPartial")
             @RenderBody()
         </main>
     </div>
