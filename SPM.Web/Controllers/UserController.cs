@@ -78,22 +78,6 @@ namespace SPM.Web.Controllers
             // and upload if it is not null
             if (team.FormImage != null)
             {
-                /*
-                // Check if file is an image
-                if (!team.FormImage.ContentType.Equals("image/jpg", StringComparison.OrdinalIgnoreCase) ||
-                    !team.FormImage.ContentType.Equals("image/jpeg", StringComparison.OrdinalIgnoreCase) ||
-                    !team.FormImage.ContentType.Equals("image/pjpeg", StringComparison.OrdinalIgnoreCase) ||
-                    !team.FormImage.ContentType.Equals("image/gif", StringComparison.OrdinalIgnoreCase) ||
-                    !team.FormImage.ContentType.Equals("image/x-png", StringComparison.OrdinalIgnoreCase) ||
-                    !team.FormImage.ContentType.Equals("image/png", StringComparison.OrdinalIgnoreCase))
-                {
-                    // If so add error to model state
-                    ModelState.AddModelError("FormImage", "File must be an image");
-
-                    // Return back to form
-                    return View();
-                }
-                */
 
                 // Upload the image and get the url result and assign it to the team image field
                 team.Image = await storageService.UploadFile(team.FormImage);
