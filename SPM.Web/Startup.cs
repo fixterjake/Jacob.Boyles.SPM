@@ -56,7 +56,7 @@ namespace SPM.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<Role> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -76,6 +76,8 @@ namespace SPM.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            SeedData.CreateDefaultRoles(roleManager);
 
             app.UseEndpoints(endpoints =>
             {

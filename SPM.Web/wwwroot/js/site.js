@@ -1,4 +1,18 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
-// Write your JavaScript code.
+// Enable all popovers
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
+// Alert fade away
+$(document).ready(function () {
+
+    window.setTimeout(function () {
+        $(".alert").fadeTo(1000, 0).slideUp(1000, function () {
+            $(this).remove();
+        });
+    }, 5000);
+
+});
