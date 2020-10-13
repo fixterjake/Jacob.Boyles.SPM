@@ -1,13 +1,26 @@
-﻿@model IEnumerable<Team>
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<Team>
 
 @{
     Layout = "UserLayout";
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Teams Dashboard";
 }
 
 <div class="container secondary rounded box-shadow border border-dark text-white"
      style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
-    <h3 class="text-center">Dashboard</h3>
+    <h3 class="text-center" style="padding-bottom: 20px;">
+        Teams Dashboard
+    </h3>
+    <p class="text-center" style="padding-bottom: 20px;">
+        View any of your teams below, or, create a new team.
+    </p>
+    @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
+    {
+        <div class="container text-center justify-content-center border-top border-light">
+            <br />
+            <a class="btn btn-primary" asp-controller="User" asp-action="CreateTeam">Create Team</a>
+        </div>
+    }
 </div>
 
 @if (!Model.Any())
@@ -25,10 +38,12 @@
 <div class="row justify-content-center">
     @foreach (var team in Model)
     {
-        <div class="col-sm">
+        <div class="col-sm justify-content-center">
             <div class="card secondary" style="width: 18rem;">
-                <a asp-controller="User" asp-action="Team" asp-route-id="@team.Id">
-                    <img src="@team.Image" class="card-img-top" alt="@team.Name">
+                <a asp-controller="User" asp-action="Team" asp-route-id="@team.Id"
+                   data-toggle="tooltip" title="View team dashboard">
+                    <img src="@team.Image" class="card-img-top" alt="@team.Name"
+                         style="width: 100%; height: 10vw; object-fit: cover;">
                 </a>
                 <div class="card-body text-center text-white">
                     <p class="card-text">@team.Name</p>

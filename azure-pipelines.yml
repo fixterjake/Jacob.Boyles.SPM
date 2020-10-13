@@ -16,19 +16,12 @@ variables:
 steps:
     # Builds the solution
     - task: UseDotNet@2 
-      displayName: ".NET Core 3.1.x"
+      displayName: "Build Projects"
       inputs:
         version: '3.1.x'
         packageType: sdk
     - script: dotnet build --configuration $(buildConfiguration)
       displayName: 'dotnet build $(buildConfiguration)'
-      
-      # Run the unit tests
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        projects: 'SPM.Test.csproj'
-        arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
     # Publishes the solution
     - task: DotNetCoreCLI@2
