@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using SPM.Web.Models;
+using SPM.Web.Services;
 using Task = System.Threading.Tasks.Task;
 
 namespace SPM.Web.Areas.Identity.Pages.Account
@@ -90,8 +91,12 @@ namespace SPM.Web.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await AmazonEmailService.SendEmail(
+                        "Jacob@fixterjake.com",
+                        Input.Email,
+                        "Confirm Email - Simple Project Management",
+                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
+                        $"Please confirm your account by clicking, or copying and pasting this URL into your browser: {HtmlEncoder.Default.Encode(callbackUrl)}.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
