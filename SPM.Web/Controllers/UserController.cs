@@ -110,8 +110,116 @@ namespace SPM.Web.Controllers
             // Save database changes
             await _context.SaveChangesAsync();
 
-            // Redirect to team dahsboard
+            // Redirect to team dashboard
             return Redirect("/user").WithSuccess("Success", "Team created.");
+        }
+
+        public IActionResult Team(int id)
+        {
+            // Try to find team
+            var team = _context.Teams.FirstOrDefault(x => x.Id == id);
+
+            // If team is null redirect back with error message
+            if (team == null)
+            {
+                return Redirect("/user").WithDanger("Error", "Team not found.");
+            }
+
+            // Get user id
+            var userId = int.Parse(_userManager.GetUserId(User));
+
+            // Try to find user team object which means user can view the team
+            var userTeam = _context.UserTeams
+                .Where(x => x.TeamId == team.Id)
+                .FirstOrDefault(x => x.UserId == userId);
+
+            // If association was not found, redirect back with error message
+            if (userTeam == null)
+            {
+                return Redirect("/user").WithDanger("Error", "Team not found.");
+            }
+
+            // Get number of users in team
+            ViewBag.Users = _context.UserTeams.Count(x => x.TeamId == team.Id);
+
+            // Get number of active sprints
+            ViewBag.ActiveSprints = _context.Sprints
+                .Where(x => x.TeamId == team.Id)
+                .Count(x => x.Status == SprintStatus.Active);
+
+            // Get number of inactive sprints
+            ViewBag.InactiveSprints = _context.Sprints
+                .Where(x => x.TeamId == team.Id)
+                .Count(x => x.Status == SprintStatus.Inactive);
+
+            // get number of extended sprints
+            ViewBag.ExtendedSprints = _context.Sprints
+                .Where(x => x.TeamId == team.Id)
+                .Count(x => x.Status == SprintStatus.Extended);
+
+            // Get number of completed sprints
+            ViewBag.CompletedSprints = _context.Sprints
+                .Where(x => x.TeamId == team.Id)
+                .Count(x => x.Status == SprintStatus.Complete);
+
+            // Get all sprints that are not completed
+            ViewBag.Sprints = _context.Sprints
+                .Where(x => x.TeamId == team.Id)
+                .Where(x => x.Status == SprintStatus.Active
+                                ||x.Status == SprintStatus.Inactive
+                                ||x.Status == SprintStatus.Extended)
+                .OrderBy(x => x.StartDate)
+                .ToList();
+
+            // Return view with the team
+            return View(team);
+        }
+
+        public IActionResult CreateSprint(int id)
+        {
+            ViewBag.TeamId = id;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSprint([Bind("Name,Description,Status,StartDate,EndDate")] Sprint sprint, int id)
+        {
+            // Check if returned data is valid
+            if (!ModelState.IsValid)
+            {
+                ViewBag.TeamId = id;
+                return View();
+            }
+
+            // Get creator's user id for use in object creation
+            var creator = int.Parse(_userManager.GetUserId(User));
+
+            // Set other sprint fields
+            sprint.TeamId = id;
+            sprint.Created = DateTime.Now;
+
+            // Add sprint to database context
+            await _context.Sprints.AddAsync(sprint);
+
+            // Save database changes
+            await _context.SaveChangesAsync();
+
+            // Create user sprint object
+            var userSprint = new UserSprint
+            {
+                UserId = creator,
+                SprintId = sprint.Id,
+                Created = DateTime.Now
+            };
+
+            // Add user sprint to database
+            await _context.UserSprints.AddAsync(userSprint);
+
+            // Save database changes
+            await _context.SaveChangesAsync();
+
+            // Redirect to sprint view with success message
+            return Redirect($"/user/sprint/{sprint.Id}").WithSuccess("Success", "Sprint created.");
         }
     }
 }

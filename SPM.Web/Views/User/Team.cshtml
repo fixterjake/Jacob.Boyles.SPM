@@ -1,0 +1,110 @@
+﻿@model Team
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = $"Team - {@Model.Name}";
+}
+
+<div class="container secondary rounded box-shadow border border-dark text-white"
+     style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+    <h3 class="text-center" style="padding-bottom: 20px;">
+        Team Dashboard
+    </h3>
+    @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
+    {
+        <div class="container text-center justify-content-center border-top border-light">
+            <br />
+            <a class="btn btn-primary" asp-controller="User" asp-action="CreateSprint" asp-route-id="@Model.Id">Create Sprint</a>
+        </div>
+    }
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-sm">
+        <div class="row">
+            @if (ViewBag.Sprints.Count > 0)
+            {
+                @foreach (var sprint in ViewBag.Sprints)
+                {
+                    <div class="col-sm justify-content-center">
+                        <div class="card secondary" style="width: 18rem;">
+                            <div class="card-body text-center text-white">
+                                <h5 class="card-title">
+                                    <a asp-controller="User" asp-action="Sprint" asp-route-id="@sprint.Id"
+                                       data-toggle="tooltip" title="View sprint dashboard" class="text-white">
+                                        @sprint.Name
+                                    </a>
+                                </h5>
+                                @if (sprint.Status == SprintStatus.Active)
+                                {
+                                    <span class="badge badge-primary">Active</span>
+                                }
+                                else if (sprint.Status == SprintStatus.Inactive)
+                                {
+                                    <span class="badge badge-danger">Inactive</span>
+                                }
+                                else if (sprint.Status == SprintStatus.Extended)
+                                {
+                                    <span class="badge badge-warning">Extended</span>
+                                }
+                                else if (sprint.Status == SprintStatus.Complete)
+                                {
+                                    <span class="badge badge-success">Completed</span>
+                                }
+                                <br/>
+                                <p class="card-text border-top border-light" style="margin-top: 20px; padding-top: 20px;">
+                                    @sprint.Description
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="card secondary" style="width: 18rem;">
+                    <div class="card-body text-center text-white">
+                        <h5 class="card-title">No Sprints Found</h5>
+                        <p class="card-text">
+                            If you believe this is an error please contact your site administrator.
+                        </p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-sm-4" style="margin-left: 20px;">
+        <div class="container secondary rounded box-shadow border border-dark text-white"
+             style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+            <h3 class="text-center border-bottom border-light" style="padding-bottom: 20px;">
+                Team Information
+            </h3>
+            <table class="table table-borderless table-responsive-sm text-white">
+                <tbody>
+                    <tr>
+                        <td>Users</td>
+                        <td>@ViewBag.Users</td>
+                    </tr>
+                    <tr>
+                        <td>Active Sprints</td>
+                        <td>@ViewBag.ActiveSprints</td>
+                    </tr>
+                    <tr>
+                        <td>Inactive Sprints</td>
+                        <td>@ViewBag.InactiveSprints</td>
+                    </tr>
+                    <tr>
+                        <td>Extended Sprints</td>
+                        <td>@ViewBag.ExtendedSprints</td>
+                    </tr>
+                    <tr>
+                        <td>Completed Sprints</td>
+                        <td>@ViewBag.CompletedSprints</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

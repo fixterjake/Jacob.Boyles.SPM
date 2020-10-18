@@ -25,13 +25,17 @@
 
 @if (!Model.Any())
 {
-    <div class="container secondary rounded box-shadow border border-dark text-white"
-         style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
-        <h5 class="text-center">
-            <i class="fas fa-exclamation-circle"></i>
-            You are not a part of any teams.
-            If you believe this is an error please contact your site administrator.
-        </h5>
+    <div class="row">
+        <div class="col-sm">
+            <div class="card secondary" style="width: 18rem;">
+                <div class="card-body text-center text-white">
+                    <h5 class="card-title">No Teams Found</h5>
+                    <p class="card-text">
+                        If you believe this is an error please contact your site administrator.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 }
 
