@@ -49,6 +49,7 @@ namespace SPM.Web
                     options.User.RequireUniqueEmail = true;
                     
                     // Require account confirmation
+                    options.SignIn.RequireConfirmedEmail = true;
                     options.SignIn.RequireConfirmedAccount = true;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
