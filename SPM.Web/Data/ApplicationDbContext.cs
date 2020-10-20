@@ -24,7 +24,6 @@ namespace SPM.Web.Data
         public DbSet<Task> Tasks { get; set; }
         public DbSet<TaskComment> TaskComments { get; set; }
         public DbSet<Team> Teams { get; set; }
-        public DbSet<TeamPermissions> TeamPermissions { get; set; }
         public DbSet<UserItem> UserItems { get; set; }
         public DbSet<UserSprint> UserSprints { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }

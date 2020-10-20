@@ -11,9 +11,20 @@ namespace SPM.Web.Models
         [Key]
         public int Id { get; set; }
         public int SprintId { get; set; }
-        public string Title { get; set; }
+
+        [Required(ErrorMessage = "Please enter an item name.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Name")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Please enter an item description.")]
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Description")]
         public string Description { get; set; }
         public int Time { get; set; }
+
+        [Required(ErrorMessage = "Please enter an item name.")]
+        [Display(Name = "Status")]
         public ItemStatus Status { get; set; }
         public DateTime Created { get; set; }
 

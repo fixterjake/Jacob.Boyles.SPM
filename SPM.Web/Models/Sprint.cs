@@ -33,6 +33,7 @@ namespace SPM.Web.Models
         [DataType(DataType.Date)]
         [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
+
         [Required(ErrorMessage = "Please select an initial status.")]
         public SprintStatus Status { get; set; }
         public DateTime Created { get; set; }

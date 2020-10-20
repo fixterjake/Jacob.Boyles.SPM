@@ -10,9 +10,10 @@ namespace SPM.Web.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
         public int ItemId { get; set; }
+        public int SprintId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public TaskStatus Status { get; set; }
         public DateTime Created { get; set; }
 
