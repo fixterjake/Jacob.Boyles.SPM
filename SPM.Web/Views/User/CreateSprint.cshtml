@@ -1,0 +1,84 @@
+﻿@model Sprint
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Create Team";
+}
+
+<div class="container secondary rounded box-shadow border border-dark text-white"
+     style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+    <h3 class="text-center" style="padding-bottom: 20px;">
+        Create New Sprint
+    </h3>
+
+    <br />
+
+    <form asp-controller="User" asp-action="CreateSprint" asp-route-id="@ViewBag.TeamId" method="post">
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" type="text" class="form-control" placeholder="Sprint Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="StartDate"></label>
+                    <input asp-for="StartDate" id="datepicker1" type="text" class="form-control" placeholder="MM/DD/YYYY" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="Status"></label>
+                    <select asp-for="Status" 
+                            class="form-control" 
+                            asp-items="Html.GetEnumSelectList<SprintStatus>()">
+                        <option disabled="disabled">Select One</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="EndDate"></label>
+                    <input asp-for="EndDate" id="datepicker2" type="text" class="form-control" placeholder="MM/DD/YYYY" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" type="text" class="form-control" placeholder="Sprint Description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 20px;">
+            <div class="col-sm">
+                <button type="submit" class="btn btn-primary float-sm-none">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts
+{
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $("#datepicker1").datepicker();
+        });
+
+        $(function () {
+            $("#datepicker2").datepicker();
+        });
+    </script>
+}

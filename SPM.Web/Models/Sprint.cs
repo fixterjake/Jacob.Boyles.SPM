@@ -10,10 +10,31 @@ namespace SPM.Web.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Title { get; set; }
+
+        [Display(Name = "Team Id")]
+        public int TeamId { get; set; }
+
+        [Required(ErrorMessage = "Please enter a sprint name.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Name")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Please enter a description.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Description")]
         public string Description { get; set; }
+
+        [Required(ErrorMessage = "Please enter a starting date.")]
+        [DataType(DataType.Date)]
+        [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
+
+        [Required(ErrorMessage = "Please enter an ending date.")]
+        [DataType(DataType.Date)]
+        [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
+
+        [Required(ErrorMessage = "Please select an initial status.")]
         public SprintStatus Status { get; set; }
         public DateTime Created { get; set; }
 
