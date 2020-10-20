@@ -19,7 +19,9 @@ namespace SPM.Web.Controllers
     [Authorize]
     public class UserController : Controller
     {
+        // Database context
         private readonly ApplicationDbContext _context;
+        // User manager
         private readonly UserManager<User> _userManager;
 
         /// <summary>
@@ -33,6 +35,10 @@ namespace SPM.Web.Controllers
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Function to show index view
+        /// </summary>
+        /// <returns>Index view</returns>
         public async Task<IActionResult> Index()
         {
             // Get user using the built in identity user manager
@@ -53,11 +59,20 @@ namespace SPM.Web.Controllers
             return View(teams);
         }
 
+        /// <summary>
+        /// Function to show create team view
+        /// </summary>
+        /// <returns>Create team view</returns>
         public IActionResult CreateTeam()
         {
             return View();
         }
 
+        /// <summary>
+        /// Create team post endpoint to create a team
+        /// </summary>
+        /// <param name="team">Model bound team from form</param>
+        /// <returns>Create team view if invalid data, or show the team that was created</returns>
         [HttpPost]
         public async Task<IActionResult> CreateTeam([Bind("Name,Description,FormImage")] Team team)
         {
@@ -116,6 +131,11 @@ namespace SPM.Web.Controllers
             return Redirect("/user").WithSuccess("Success", "Team created.");
         }
 
+        /// <summary>
+        /// Function to show a specific team
+        /// </summary>
+        /// <param name="id">Id of team to show</param>
+        /// <returns>Team view</returns>
         public IActionResult Team(int id)
         {
             // Try to find team
@@ -177,12 +197,23 @@ namespace SPM.Web.Controllers
             return View(team);
         }
 
+        /// <summary>
+        /// Function to show create sprint view
+        /// </summary>
+        /// <param name="id">Team id for use in form</param>
+        /// <returns>Create sprint view</returns>
         public IActionResult CreateSprint(int id)
         {
             ViewBag.TeamId = id;
             return View();
         }
 
+        /// <summary>
+        /// Create sprint post endpoint for sprint creation
+        /// </summary>
+        /// <param name="sprint">Model bound sprint from form</param>
+        /// <param name="id">Team id for use in sprint creation</param>
+        /// <returns>Create sprint view if invalid data, or show the sprint</returns>
         [HttpPost]
         public async Task<IActionResult> CreateSprint([Bind("Name,Description,Status,StartDate,EndDate")] Sprint sprint, int id)
         {
@@ -224,6 +255,11 @@ namespace SPM.Web.Controllers
             return Redirect($"/user/sprint/{sprint.Id}").WithSuccess("Success", "Sprint created.");
         }
 
+        /// <summary>
+        /// Function to show a specific sprint view
+        /// </summary>
+        /// <param name="id">Id of sprint to view</param>
+        /// <returns>Sprint view</returns>
         public IActionResult Sprint(int id)
         {
             // Try to get sprint
@@ -281,12 +317,23 @@ namespace SPM.Web.Controllers
             return View(sprint);
         }
 
+        /// <summary>
+        /// Function to show create item view
+        /// </summary>
+        /// <param name="id">Id of sprint for use in form</param>
+        /// <returns>Create item form</returns>
         public IActionResult CreateItem(int id)
         {
             ViewBag.SprintId = id;
             return View();
         }
 
+        /// <summary>
+        /// Create item post endpoint 
+        /// </summary>
+        /// <param name="item">Model bound item from form</param>
+        /// <param name="id">Sprint id for use in item creation</param>
+        /// <returns>Create item view if data is invalid, or show the item</returns>
         [HttpPost]
         public async Task<IActionResult> CreateItem([Bind("Name,Description,Status,StartDate,EndDate")] Item item, int id)
         {
@@ -328,6 +375,11 @@ namespace SPM.Web.Controllers
             return Redirect($"/user/item/{item.Id}").WithSuccess("Success", "Item created.");
         }
 
+        /// <summary>
+        /// Function to show a specific item view
+        /// </summary>
+        /// <param name="id">Id of item to view</param>
+        /// <returns>Item view</returns>
         public IActionResult Item(int id)
         {
             // Try to find item
@@ -372,12 +424,23 @@ namespace SPM.Web.Controllers
             return View(item);
         }
 
+        /// <summary>
+        /// Function to show create task form
+        /// </summary>
+        /// <param name="id">Item id for use in form</param>
+        /// <returns>Create task view</returns>
         public IActionResult CreateTask(int id)
         {
             ViewBag.ItemId = id;
             return View();
         }
 
+        /// <summary>
+        /// Create task endpoint
+        /// </summary>
+        /// <param name="task">Model bound task from form</param>
+        /// <param name="id">Item id for use in task creation</param>
+        /// <returns>Create task form if data is invalid, or refresh the item page to show the task</returns>
         [HttpPost]
         public async Task<IActionResult> CreateTask([Bind("Name,Description,Status")] Task task, int id)
         {
