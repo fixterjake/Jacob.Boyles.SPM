@@ -14,7 +14,7 @@ namespace SPM.Web.Services
     public class BlobStorageService
     {
         private readonly ApplicationDbContext _context;
-        private string _connectionString;
+        private readonly string _connectionString;
 
         public BlobStorageService(ApplicationDbContext context)
         {

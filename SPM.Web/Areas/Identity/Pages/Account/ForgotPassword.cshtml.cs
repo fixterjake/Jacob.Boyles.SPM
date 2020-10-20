@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using SPM.Web.Models;
+using SPM.Web.Services;
 
 namespace SPM.Web.Areas.Identity.Pages.Account
 {
@@ -57,10 +58,12 @@ namespace SPM.Web.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(
+                await AmazonEmailService.SendEmail(
+                    "Jacob@fixterjake.com",
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Reset Password - Simple Project Management",
+                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
+                    $"Please reset your password by clicking, or copying and pasting this URL into your browser: {HtmlEncoder.Default.Encode(callbackUrl)}.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

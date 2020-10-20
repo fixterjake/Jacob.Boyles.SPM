@@ -47,6 +47,8 @@ namespace SPM.Web
 
                     // User settings
                     options.User.RequireUniqueEmail = true;
+                    
+                    // Require account confirmation
                     options.SignIn.RequireConfirmedEmail = true;
                     options.SignIn.RequireConfirmedAccount = true;
                 })
