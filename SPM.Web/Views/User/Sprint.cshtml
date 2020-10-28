@@ -10,13 +10,6 @@
     <h3 class="text-center" style="padding-bottom: 20px;">
         Sprint Dashboard
     </h3>
-    @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
-    {
-        <div class="container text-center justify-content-center border-top border-light">
-            <br />
-            <a class="btn btn-primary" asp-controller="User" asp-action="CreateItem" asp-route-id="@Model.Id">Create Item</a>
-        </div>
-    }
 </div>
 
 <br />
@@ -89,26 +82,43 @@
             </h3>
             <table class="table table-borderless table-responsive-sm text-white">
                 <tbody>
-                <tr>
-                    <td>Total Tasks</td>
-                    <td>@ViewBag.Tasks</td>
-                </tr>
-                <tr>
-                    <td>Pending Tasks</td>
-                    <td>@ViewBag.PendingTasks</td>
-                </tr>
-                <tr>
-                    <td>In Progress Tasks</td>
-                    <td>@ViewBag.InProgressTasks</td>
-                </tr>
-                <tr>
-                    <td>Blocked Tasks</td>
-                    <td>@ViewBag.BlockedTasks</td>
-                </tr>
-                <tr>
-                    <td>Completed Tasks</td>
-                    <td>@ViewBag.CompletedTasks</td>
-                </tr>
+                    <tr>
+                        <td>Total Tasks</td>
+                        <td>@ViewBag.Tasks</td>
+                    </tr>
+                    <tr>
+                        <td>Pending Tasks</td>
+                        <td>@ViewBag.PendingTasks</td>
+                    </tr>
+                    <tr>
+                        <td>In Progress Tasks</td>
+                        <td>@ViewBag.InProgressTasks</td>
+                    </tr>
+                    <tr>
+                        <td>Blocked Tasks</td>
+                        <td>@ViewBag.BlockedTasks</td>
+                    </tr>
+                    <tr>
+                        <td>Completed Tasks</td>
+                        <td>@ViewBag.CompletedTasks</td>
+                    </tr>
+                    @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
+                    {
+                        <tr>
+                            <td>
+                                <a class="btn btn-warning" asp-action="CreateItem"
+                                   data-toggle="tooltip" title="Create Item">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a class="btn btn-warning" asp-action="EditSprint" asp-route-id="@Model.Id"
+                                   data-toggle="tooltip" title="Edit Sprint">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
