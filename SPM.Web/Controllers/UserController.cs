@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SPM.Web.Data;
 using SPM.Web.Models;
 using SPM.Web.Services;
@@ -23,6 +25,8 @@ namespace SPM.Web.Controllers
         private readonly ApplicationDbContext _context;
         // User manager
         private readonly UserManager<User> _userManager;
+        // Blob storage service
+        private readonly BlobStorageService _storageService;
 
         /// <summary>
         /// User manager constructor
@@ -33,6 +37,7 @@ namespace SPM.Web.Controllers
         {
             _context = context;
             _userManager = userManager;
+            _storageService = new BlobStorageService(_context);
         }
 
         /// <summary>
@@ -470,6 +475,181 @@ namespace SPM.Web.Controllers
 
             // Redirect back to item
             return Redirect($"/user/item/{id}").WithSuccess("Success", "Task created.");
+        }
+
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public IActionResult EditTeam(int id)
+        {
+            // Try to find sprint from id
+            var team = _context.Teams.FirstOrDefault(x => x.Id == id);
+
+            // if sprint is null redirect back, if it was found show edit view
+            return team == null ? Redirect("/user").WithDanger("Error", "Team not found.") : View(team);
+        }
+
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public IActionResult EditSprint(int id)
+        {
+            // Try to find sprint from id
+            var sprint = _context.Sprints.FirstOrDefault(x => x.Id == id);
+
+            // if sprint is null redirect back, if it was found show edit view
+            return sprint == null ? Redirect("/user").WithDanger("Error", "Sprint not found.") : View(sprint);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public async Task<IActionResult> EditTeam([Bind("Name,FormImage,Description")] Team input, int id)
+        {
+            // Ensure data is valid
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            // Get team
+            var team = _context.Teams.FirstOrDefault(x => x.Id == id);
+
+            // If team was not found, redirect with error
+            if (team == null)
+            {
+                ModelState.AddModelError("Name", "Team not found.");
+                return View();
+            }
+
+            // Update data
+            // todo delete old image from azure
+            team.Image = await _storageService.UploadFile(input.FormImage);
+            team.Name = input.Name;
+            team.Description = input.Description;
+
+            // Save database changes
+            await _context.SaveChangesAsync();
+
+            // Redirect to team with success message
+            return Redirect($"/user/team/{team.Id}").WithSuccess("Success", "Team edited.");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public async Task<IActionResult> EditSprint([Bind("Name,StartDate,EndDate,Status,Description")] Sprint input, int id)
+        {
+            // Ensure data is valid
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            // Get sprint
+            var sprint = _context.Sprints.FirstOrDefault(x => x.Id == id);
+
+            // If sprint was not found, redirect with error
+            if (sprint == null)
+            {
+                ModelState.AddModelError("Name", "Sprint not found.");
+                return View();
+            }
+            
+            // Update data
+            sprint.Name = input.Name;
+            sprint.StartDate = input.StartDate;
+            sprint.EndDate = input.EndDate;
+            sprint.Status = input.Status;
+            sprint.Description = input.Description;
+
+            // Save database changes
+            await _context.SaveChangesAsync();
+
+            // Redirect back to sprint with success message
+            return Redirect($"/user/sprint/{sprint.Id}").WithSuccess("Success", "Sprint edited");
+        }
+
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public IActionResult EditItem(int id)
+        {
+            // Find item
+            var item = _context.Items.FirstOrDefault(x => x.Id == id);
+
+            // if sprint is null redirect back, if it was found show edit view
+            return item == null ? Redirect("/user").WithDanger("Error", "Item not found.") : View(item);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public async Task<IActionResult> EditItem([Bind("Name,Description")] Item input, int id)
+        {
+            // Ensure data is valid
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            // Find item
+            var item = _context.Items.FirstOrDefault(x => x.Id == id);
+
+            // Ensure item was found
+            if (item == null)
+            {
+                ModelState.AddModelError("Name", "Item not found");
+                return View();
+            }
+
+            // Update data
+            item.Name = input.Name;
+            item.Description = input.Description;
+
+            // Save changed
+            await _context.SaveChangesAsync();
+
+            // Redirect to item with success message
+            return Redirect($"/user/Item/{item.Id}").WithSuccess("Success", "Item edited.");
+        }
+
+        public IActionResult EditTask(int id)
+        {
+            // Try to find task
+            var task = _context.Tasks.FirstOrDefault(x => x.Id == id);
+
+            // Ensure task exists
+            if (task == null)
+            {
+                return Redirect("/user").WithDanger("Error", "Task not found.");
+            }
+
+            // Return view with task
+            return View(task);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public async Task<IActionResult> EditTask([Bind("Name,Status,Description")] Task input, int id)
+        {
+            // Ensure data is valid
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            // Try to find task
+            var task = _context.Tasks.FirstOrDefault(x => x.Id == id);
+
+            // Ensure task was found
+            if (task == null)
+            {
+                ModelState.AddModelError("Name", "Task not found.");
+                return View();
+            }
+
+            // Update data
+            task.Name = input.Name;
+            task.Status = input.Status;
+            task.Description = input.Description;
+
+            // Save changes
+            await _context.SaveChangesAsync();
+
+            // Redirect with success message
+            return Redirect("/user").WithSuccess("Success", "Task edited.");
         }
     }
 }
