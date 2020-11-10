@@ -21,7 +21,8 @@ namespace SPM.Web.Models
         [DataType(DataType.MultilineText)]
         [Display(Name = "Description")]
         public string Description { get; set; }
-        public int Time { get; set; }
+
+        public bool Estimated { get; set; }
 
         [Required(ErrorMessage = "Please enter an item name.")]
         [Display(Name = "Status")]

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SPM.Web.Data;
+using SPM.Web.Data.Jobs;
 
 namespace SPM.Web
 {
@@ -17,8 +18,11 @@ namespace SPM.Web
             var services = scope.ServiceProvider;
             var context = services.GetRequiredService<ApplicationDbContext>();
 
-            // Seed database with defautl data
+            // Seed database with default data
             SeedData.SeedSettings(context);
+
+            // Start all jobs
+            StartJobs.StartAllJobs(context).GetAwaiter().GetResult();
 
             // Run host
             host.Run();
