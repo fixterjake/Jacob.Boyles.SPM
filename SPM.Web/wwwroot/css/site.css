@@ -73,14 +73,6 @@ body {
 /* Custom CSS
 -------------------------------------------------- */
 
-.primary {
-    background-color: #2A3450 !important;
-}
-
-.secondary {
-    background-color: #7A7F8A;
-}
-
 .card {
     margin: 0 auto; /* Added */
     float: none; /* Added */

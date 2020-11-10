@@ -6,7 +6,7 @@
     ViewData["Title"] = "Teams Dashboard";
 }
 
-<div class="container secondary rounded box-shadow border border-dark text-white"
+<div class="container rounded box-shadow border border-dark"
      style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
     <h3 class="text-center" style="padding-bottom: 20px;">
         Teams Dashboard
@@ -16,7 +16,7 @@
     </p>
     @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
     {
-        <div class="container text-center justify-content-center border-top border-light">
+        <div class="container text-center justify-content-center border-top border-dark">
             <br />
             <a class="btn btn-primary" asp-controller="User" asp-action="CreateTeam">Create Team</a>
         </div>
@@ -27,7 +27,7 @@
 {
     <div class="row">
         <div class="col-sm">
-            <div class="card secondary" style="width: 18rem;">
+            <div class="card border border-dark rounded box-shadow" style="width: 18rem;">
                 <div class="card-body text-center text-white">
                     <h5 class="card-title">No Teams Found</h5>
                     <p class="card-text">
@@ -43,13 +43,13 @@
     @foreach (var team in Model)
     {
         <div class="col-sm justify-content-center">
-            <div class="card secondary" style="width: 18rem;">
+            <div class="card border border-dark rounded box-shadow" style="width: 18rem;">
                 <a asp-controller="User" asp-action="Team" asp-route-id="@team.Id"
                    data-toggle="tooltip" title="View team dashboard">
                     <img src="@team.Image" class="card-img-top" alt="@team.Name"
                          style="width: 100%; height: 10vw; object-fit: cover;">
                 </a>
-                <div class="card-body text-center text-white">
+                <div class="card-body text-center">
                     <p class="card-text">@team.Name</p>
                 </div>
             </div>
