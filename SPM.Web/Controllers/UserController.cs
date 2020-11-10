@@ -244,8 +244,11 @@ namespace SPM.Web.Controllers
             }
 
             // Update data
-            // todo delete old image from azure
-            team.Image = await _storageService.UploadFile(input.FormImage);
+            if (input.FormImage != null)
+            {
+                // todo delete old image from azure before uploading new one
+                team.Image = await _storageService.UploadFile(input.FormImage);
+            }
             team.Name = input.Name;
             team.Description = input.Description;
 
