@@ -1,14 +1,16 @@
-﻿@model Sprint
+﻿@using TaskStatus = SPM.Web.Models.TaskStatus
+@using Task = SPM.Web.Models.Task
+@model SPM.Web.Models.ViewModels.SprintView
 
 @{
     Layout = "UserLayout";
-    ViewData["Title"] = $"Sprint - {Model.Name}";
+    ViewData["Title"] = $"Sprint - {Model.Sprint.Name}";
 }
 
-<div class="container secondary rounded box-shadow border border-dark text-white"
+<div class="container rounded box-shadow border border-dark"
      style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
     <h3 class="text-center" style="padding-bottom: 20px;">
-        Sprint Dashboard
+        @Model.Sprint.Name
     </h3>
 </div>
 
@@ -16,71 +18,134 @@
 
 <div class="row">
     <div class="col-sm">
-        <div class="container secondary rounded box-shadow border border-dark text-white"
+        <div class="container rounded box-shadow border border-dark"
              style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
             <h3 class="text-center">
                 Items
             </h3>
         </div>
-        <div class="row">
-            @if (ViewBag.Items.Count > 0)
-            {
-                @foreach (var item in ViewBag.Items)
+        <div class="container rounded box-shadow border border-dark">
+            <table class="table table-borderless table-responsive-sm">
+                <thead>
+                <tr class="border-bottom border-dark">
+                    <th scope="col">Item</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Items)
                 {
-                    <div class="col-sm justify-content-center">
-                        <div class="card secondary" style="width: 18rem;">
-                            <div class="card-body text-center text-white">
-                                <h5 class="card-title">
-                                    <a asp-controller="User" asp-action="Item" asp-route-id="@item.Id"
-                                       data-toggle="tooltip" title="View Item" class="text-white">
-                                        @item.Name
-                                    </a>
-                                </h5>
-                                @if (item.Status == ItemStatus.Pending)
-                                {
-                                    <span class="badge badge-secondary">Pending</span>
-                                }
-                                else if (item.Status == ItemStatus.InProgress)
-                                {
-                                    <span class="badge badge-primary">In Progress</span>
-                                }
-                                else if (item.Status == ItemStatus.Blocked)
-                                {
-                                    <span class="badge badge-danger">Extended</span>
-                                }
-                                else if (item.Status == ItemStatus.Complete)
-                                {
-                                    <span class="badge badge-success">Completed</span>
-                                }
+                    <tr>
+                        <td>
+                            <a data-toggle="tooltip" title="@item.Item.Description">
+                                @item.Item.Name
+                            </a>
+                        </td>
+                        <td>
+                            @if (item.Item.Status == ItemStatus.InProgress)
+                            {
+                                <span class="badge badge-primary">In Progress</span>
+                            }
+                            else if (item.Item.Status == ItemStatus.Blocked)
+                            {
+                                <span class="badge badge-danger">Blocked</span>
+                            }
+                            else if (item.Item.Status == ItemStatus.Pending)
+                            {
+                                <span class="badge badge-warning">Pending</span>
+                            }
+                            else if (item.Item.Status == ItemStatus.Complete)
+                            {
+                                <span class="badge badge-success">Completed</span>
+                            }
+                        </td>
+                        <td>
+                            @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
+                            {
+                                <a asp-action="EditItem" asp-route-id="@item.Item.Id"
+                                   class="btn btn-warning" data-toggle="tooltip" title="Edit Item">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            }
+                            <a asp-action="CreateTask" asp-route-id="@item.Item.Id"
+                               class="btn btn-primary" data-toggle="tooltip" title="Create Task">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    @if (item.Tasks.Any())
+                    {
+                        <tr>
+                            <th colspan="3"><hr/></th>
+                        </tr>
+                        <tr class="border-bottom border-dark">
+                            <td colspan="3" class="text-center">
+                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                        data-target="#tasks-@item.Item.Id" aria-expanded="false" aria-controls="tasks-@item.Item.Id">
+                                    View Tasks <i class="fas fa-angle-double-down"></i>
+                                </button>
                                 <br/>
-                                <p class="card-text border-top border-light" style="margin-top: 20px; padding-top: 20px;">
-                                    @item.Description
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                                <div class="collapse" id="tasks-@item.Item.Id">
+                                    <div class="card card-body">
+                                        <table class="table table-borderless table-responsive-sm">
+                                            <tbody>
+                                            @foreach (var task in item.Tasks)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <a data-toggle="tooltip" title="@task.Description">
+                                                            @task.Name
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        @if (task.Status == TaskStatus.InProgress)
+                                                        {
+                                                            <span class="badge badge-primary">In Progress</span>
+                                                        }
+                                                        else if (task.Status == TaskStatus.Blocked)
+                                                        {
+                                                            <span class="badge badge-danger">Blocked</span>
+                                                        }
+                                                        else if (task.Status == TaskStatus.Pending)
+                                                        {
+                                                            <span class="badge badge-warning">Pending</span>
+                                                        }
+                                                        else if (task.Status == TaskStatus.Complete)
+                                                        {
+                                                            <span class="badge badge-success">Completed</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
+                                                        {
+                                                            <a asp-action="EditTask" asp-route-id="@task.Id"
+                                                               class="btn btn-warning" data-toggle="tooltip" title="Edit Task">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
                 }
-            }
-            else
-            {
-                <div class="card secondary" style="width: 18rem;">
-                    <div class="card-body text-center text-white">
-                        <h5 class="card-title">No Items Found</h5>
-                        <p class="card-text">
-                            If you believe this is an error please contact your site administrator.
-                        </p>
-                    </div>
-                </div>
-            }
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="col-sm-4" style="margin-left: 20px;">
-        <div class="container secondary rounded box-shadow border border-dark text-white"
+        <div class="container rounded box-shadow border border-dark"
              style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
-            <h3 class="text-center border-bottom border-light" style="padding-bottom: 20px;">
+            <h3 class="text-center border-bottom border-dark" style="padding-bottom: 20px;">
                 Sprint Information
             </h3>
-            <table class="table table-borderless table-responsive-sm text-white">
+            <table class="table table-borderless table-responsive-sm">
                 <tbody>
                     <tr>
                         <td>Total Tasks</td>
@@ -106,13 +171,13 @@
                     {
                         <tr>
                             <td>
-                                <a class="btn btn-warning" asp-action="CreateItem"
+                                <a class="btn btn-primary" asp-action="CreateItem" asp-route-id="@Model.Sprint.Id"
                                    data-toggle="tooltip" title="Create Item">
                                     <i class="fas fa-plus"></i>
                                 </a>
                             </td>
                             <td>
-                                <a class="btn btn-warning" asp-action="EditSprint" asp-route-id="@Model.Id"
+                                <a class="btn btn-warning" asp-action="EditSprint" asp-route-id="@Model.Sprint.Id"
                                    data-toggle="tooltip" title="Edit Sprint">
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -124,8 +189,3 @@
         </div>
     </div>
 </div>
-
-@foreach (var item in ViewBag.Items)
-{
-
-}

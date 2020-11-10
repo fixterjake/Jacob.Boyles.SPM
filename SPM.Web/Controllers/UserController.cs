@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.TagHelpers.Cache;
 using Microsoft.EntityFrameworkCore;
 using SPM.Web.Data;
 using SPM.Web.Models;
+using SPM.Web.Models.ViewModels;
 using SPM.Web.Services;
 using ZDC.Web.Extensions;
 using Task = SPM.Web.Models.Task;
@@ -203,6 +205,58 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
+        /// Function to show the edit team view
+        /// </summary>
+        /// <param name="id">Id of team to edit</param>
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public IActionResult EditTeam(int id)
+        {
+            // Try to find sprint from id
+            var team = _context.Teams.FirstOrDefault(x => x.Id == id);
+
+            // if sprint is null redirect back, if it was found show edit view
+            return team == null ? Redirect("/user").WithDanger("Error", "Team not found.") : View(team);
+        }
+
+        /// <summary>
+        /// Edit team endpoint
+        /// </summary>
+        /// <param name="input">Model bound team from edit form</param>
+        /// <param name="id">Id of team to edit</param>
+        [HttpPost]
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public async Task<IActionResult> EditTeam([Bind("Name,FormImage,Description")] Team input, int id)
+        {
+            // Ensure data is valid
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            // Get team
+            var team = _context.Teams.FirstOrDefault(x => x.Id == id);
+
+            // If team was not found, redirect with error
+            if (team == null)
+            {
+                ModelState.AddModelError("Name", "Team not found.");
+                return View();
+            }
+
+            // Update data
+            // todo delete old image from azure
+            team.Image = await _storageService.UploadFile(input.FormImage);
+            team.Name = input.Name;
+            team.Description = input.Description;
+
+            // Save database changes
+            await _context.SaveChangesAsync();
+
+            // Redirect to team with success message
+            return Redirect($"/user/team/{team.Id}").WithSuccess("Success", "Team edited.");
+        }
+
+        /// <summary>
         /// Function to show create sprint view
         /// </summary>
         /// <param name="id">Team id for use in form</param>
@@ -290,6 +344,46 @@ namespace SPM.Web.Controllers
                 return Redirect("/user").WithDanger("Error", "Sprint not found");
             }
 
+            // Get all items within sprint
+            var items = _context.Items
+                .Where(x => x.SprintId == sprint.Id)
+                .ToList();
+
+            // Create list of item views to populate
+            var itemViews = new List<ItemView>();
+
+            // Populate item views
+            foreach (var item in items)
+            {
+                itemViews.Add(new ItemView 
+                    {
+                        Item = item,
+                        Tasks = _context.Tasks
+                            .Where(x => x.ItemId == item.Id)
+                            .ToList()
+                    }
+                );
+            }
+
+            // Create sprint view model
+            var sprintView = new SprintView
+            {
+                Sprint = sprint,
+                Items = itemViews
+            };
+
+            // Get all users in sprint
+            var sprintUsers = _context.UserSprints
+                .Where(x => x.SprintId == sprint.Id)
+                .Select(x => x.UserId)
+                .ToList();
+            var users = _context.Users
+                .Where(x => sprintUsers.Contains(x.Id))
+                .ToList();
+
+            // Add users to view bag
+            ViewBag.Users = users;
+
             // Get all items within this sprint
             ViewBag.Items = _context.Items
                 .Where(x => x.SprintId == sprint.Id)
@@ -319,7 +413,60 @@ namespace SPM.Web.Controllers
                 .Where(x => x.SprintId == sprint.Id)
                 .Count(x => x.Status == TaskStatus.Complete);
 
-            return View(sprint);
+            return View(sprintView);
+        }
+
+        /// <summary>
+        /// Function to show the edit sprint view
+        /// </summary>
+        /// <param name="id">Id of sprint to edit</param>
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public IActionResult EditSprint(int id)
+        {
+            // Try to find sprint from id
+            var sprint = _context.Sprints.FirstOrDefault(x => x.Id == id);
+
+            // if sprint is null redirect back, if it was found show edit view
+            return sprint == null ? Redirect("/user").WithDanger("Error", "Sprint not found.") : View(sprint);
+        }
+
+        /// <summary>
+        /// Endpoint to edit sprint
+        /// </summary>
+        /// <param name="input">Model bound sprint data from form</param>
+        /// <param name="id">Id of sprint to edit</param>
+        [HttpPost]
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public async Task<IActionResult> EditSprint([Bind("Name,StartDate,EndDate,Status,Description")] Sprint input, int id)
+        {
+            // Ensure data is valid
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            // Get sprint
+            var sprint = _context.Sprints.FirstOrDefault(x => x.Id == id);
+
+            // If sprint was not found, redirect with error
+            if (sprint == null)
+            {
+                ModelState.AddModelError("Name", "Sprint not found.");
+                return View();
+            }
+
+            // Update data
+            sprint.Name = input.Name;
+            sprint.StartDate = input.StartDate;
+            sprint.EndDate = input.EndDate;
+            sprint.Status = input.Status;
+            sprint.Description = input.Description;
+
+            // Save database changes
+            await _context.SaveChangesAsync();
+
+            // Redirect back to sprint with success message
+            return Redirect($"/user/sprint/{sprint.Id}").WithSuccess("Success", "Sprint edited");
         }
 
         /// <summary>
@@ -377,56 +524,57 @@ namespace SPM.Web.Controllers
             await _context.SaveChangesAsync();
 
             // Redirect to sprint view with success message
-            return Redirect($"/user/item/{item.Id}").WithSuccess("Success", "Item created.");
+            return Redirect($"/user/sprint/{item.SprintId}").WithSuccess("Success", "Item created.");
         }
 
         /// <summary>
-        /// Function to show a specific item view
+        /// Function to show the edit item view
         /// </summary>
-        /// <param name="id">Id of item to view</param>
-        /// <returns>Item view</returns>
-        public IActionResult Item(int id)
+        /// <param name="id">Id of item to edit</param>
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public IActionResult EditItem(int id)
         {
-            // Try to find item
+            // Find item
             var item = _context.Items.FirstOrDefault(x => x.Id == id);
 
-            // If item was not found redirect with error
-            if (item == null)
+            // if sprint is null redirect back, if it was found show edit view
+            return item == null ? Redirect("/user").WithDanger("Error", "Item not found.") : View(item);
+        }
+
+        /// <summary>
+        /// Endpoint to receive the edit item data
+        /// </summary>
+        /// <param name="input">Model bound item data from form</param>
+        /// <param name="id">Id of item to edit</param>
+        [HttpPost]
+        [Authorize(Roles = "Administrator,Maintainer")]
+        public async Task<IActionResult> EditItem([Bind("Name,Description")] Item input, int id)
+        {
+            // Ensure data is valid
+            if (!ModelState.IsValid)
             {
-                return Redirect("/user").WithDanger("Error", "Item not found.");
+                return View();
             }
 
-            // Get list of tasks
-            ViewBag.Tasks = _context.Tasks
-                .Where(x => x.ItemId == item.Id)
-                .Where(x => x.Status == TaskStatus.InProgress ||
-                            x.Status == TaskStatus.Pending ||
-                            x.Status == TaskStatus.Blocked)
-                .OrderByDescending(x => x.Status)
-                .ToList();
+            // Find item
+            var item = _context.Items.FirstOrDefault(x => x.Id == id);
 
-            // Get pending tasks
-            ViewBag.PendingTasks = _context.Tasks
-                .Where(x => x.ItemId == item.Id)
-                .Count(x => x.Status == TaskStatus.Pending);
+            // Ensure item was found
+            if (item == null)
+            {
+                ModelState.AddModelError("Name", "Item not found");
+                return View();
+            }
 
-            // Get number of blocked tasks
-            ViewBag.BlockedTasks = _context.Tasks
-                .Where(x => x.ItemId == item.Id)
-                .Count(x => x.Status == TaskStatus.Blocked);
+            // Update data
+            item.Name = input.Name;
+            item.Description = input.Description;
 
-            // Get number of in progress tasks
-            ViewBag.InProgressTasks = _context.Tasks
-                .Where(x => x.ItemId == item.Id)
-                .Count(x => x.Status == TaskStatus.InProgress);
+            // Save changed
+            await _context.SaveChangesAsync();
 
-            // Get number of completed tasks
-            ViewBag.CompletedTasks = _context.Tasks
-                .Where(x => x.ItemId == item.Id)
-                .Count(x => x.Status == TaskStatus.Complete);
-
-            // Return view with item data
-            return View(item);
+            // Redirect to sprint view with success message
+            return Redirect($"/user/sprint/{item.SprintId}").WithSuccess("Success", "Item edited.");
         }
 
         /// <summary>
@@ -474,152 +622,28 @@ namespace SPM.Web.Controllers
             await _context.SaveChangesAsync();
 
             // Redirect back to item
-            return Redirect($"/user/item/{id}").WithSuccess("Success", "Task created.");
+            return Redirect($"/user/sprint/{task.SprintId}").WithSuccess("Success", "Task created.");
         }
 
+        /// <summary>
+        /// Function to show the edit task view
+        /// </summary>
+        /// <param name="id">Id of task to edit</param>
         [Authorize(Roles = "Administrator,Maintainer")]
-        public IActionResult EditTeam(int id)
-        {
-            // Try to find sprint from id
-            var team = _context.Teams.FirstOrDefault(x => x.Id == id);
-
-            // if sprint is null redirect back, if it was found show edit view
-            return team == null ? Redirect("/user").WithDanger("Error", "Team not found.") : View(team);
-        }
-
-        [Authorize(Roles = "Administrator,Maintainer")]
-        public IActionResult EditSprint(int id)
-        {
-            // Try to find sprint from id
-            var sprint = _context.Sprints.FirstOrDefault(x => x.Id == id);
-
-            // if sprint is null redirect back, if it was found show edit view
-            return sprint == null ? Redirect("/user").WithDanger("Error", "Sprint not found.") : View(sprint);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Administrator,Maintainer")]
-        public async Task<IActionResult> EditTeam([Bind("Name,FormImage,Description")] Team input, int id)
-        {
-            // Ensure data is valid
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            // Get team
-            var team = _context.Teams.FirstOrDefault(x => x.Id == id);
-
-            // If team was not found, redirect with error
-            if (team == null)
-            {
-                ModelState.AddModelError("Name", "Team not found.");
-                return View();
-            }
-
-            // Update data
-            // todo delete old image from azure
-            team.Image = await _storageService.UploadFile(input.FormImage);
-            team.Name = input.Name;
-            team.Description = input.Description;
-
-            // Save database changes
-            await _context.SaveChangesAsync();
-
-            // Redirect to team with success message
-            return Redirect($"/user/team/{team.Id}").WithSuccess("Success", "Team edited.");
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Administrator,Maintainer")]
-        public async Task<IActionResult> EditSprint([Bind("Name,StartDate,EndDate,Status,Description")] Sprint input, int id)
-        {
-            // Ensure data is valid
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            // Get sprint
-            var sprint = _context.Sprints.FirstOrDefault(x => x.Id == id);
-
-            // If sprint was not found, redirect with error
-            if (sprint == null)
-            {
-                ModelState.AddModelError("Name", "Sprint not found.");
-                return View();
-            }
-            
-            // Update data
-            sprint.Name = input.Name;
-            sprint.StartDate = input.StartDate;
-            sprint.EndDate = input.EndDate;
-            sprint.Status = input.Status;
-            sprint.Description = input.Description;
-
-            // Save database changes
-            await _context.SaveChangesAsync();
-
-            // Redirect back to sprint with success message
-            return Redirect($"/user/sprint/{sprint.Id}").WithSuccess("Success", "Sprint edited");
-        }
-
-        [Authorize(Roles = "Administrator,Maintainer")]
-        public IActionResult EditItem(int id)
-        {
-            // Find item
-            var item = _context.Items.FirstOrDefault(x => x.Id == id);
-
-            // if sprint is null redirect back, if it was found show edit view
-            return item == null ? Redirect("/user").WithDanger("Error", "Item not found.") : View(item);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Administrator,Maintainer")]
-        public async Task<IActionResult> EditItem([Bind("Name,Description")] Item input, int id)
-        {
-            // Ensure data is valid
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            // Find item
-            var item = _context.Items.FirstOrDefault(x => x.Id == id);
-
-            // Ensure item was found
-            if (item == null)
-            {
-                ModelState.AddModelError("Name", "Item not found");
-                return View();
-            }
-
-            // Update data
-            item.Name = input.Name;
-            item.Description = input.Description;
-
-            // Save changed
-            await _context.SaveChangesAsync();
-
-            // Redirect to item with success message
-            return Redirect($"/user/Item/{item.Id}").WithSuccess("Success", "Item edited.");
-        }
-
         public IActionResult EditTask(int id)
         {
             // Try to find task
             var task = _context.Tasks.FirstOrDefault(x => x.Id == id);
 
-            // Ensure task exists
-            if (task == null)
-            {
-                return Redirect("/user").WithDanger("Error", "Task not found.");
-            }
-
-            // Return view with task
-            return View(task);
+            // Ensure task exists and return view
+            return task == null ? Redirect("/user").WithDanger("Error", "Task not found.") : View(task);
         }
 
+        /// <summary>
+        /// Endpoint to receive edited task data
+        /// </summary>
+        /// <param name="input">Model bound task from form</param>
+        /// <param name="id">Id of task to edit</param>
         [HttpPost]
         [Authorize(Roles = "Administrator,Maintainer")]
         public async Task<IActionResult> EditTask([Bind("Name,Status,Description")] Task input, int id)
@@ -648,8 +672,8 @@ namespace SPM.Web.Controllers
             // Save changes
             await _context.SaveChangesAsync();
 
-            // Redirect with success message
-            return Redirect("/user").WithSuccess("Success", "Task edited.");
+            // Redirect to sprint view with success message
+            return Redirect($"/user/sprint/{task.SprintId}").WithSuccess("Success", "Task edited.");
         }
     }
 }
