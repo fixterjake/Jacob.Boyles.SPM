@@ -1,0 +1,48 @@
+﻿@model Team
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Create Team";
+}
+
+<div class="container rounded box-shadow border border-dark"
+     style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+    <h3 class="text-center" style="padding-bottom: 20px;">
+        Create New Team
+    </h3>
+
+    <br/>
+    
+    <form asp-controller="User" asp-action="CreateTeam" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" type="text" class="form-control" placeholder="Team Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="FormImage"></label>
+                    <input asp-for="FormImage" type="file" class="form-control" placeholder="Select Team Image" />
+                    <span asp-validation-for="FormImage" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" type="text" class="form-control" placeholder="Team Description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>

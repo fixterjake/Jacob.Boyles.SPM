@@ -1,0 +1,54 @@
+﻿@using TaskStatus = SPM.Web.Models.TaskStatus
+@model SPM.Web.Models.Task
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Create Task";
+}
+
+
+<div class="container rounded box-shadow border border-dark"
+     style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+    <h3 class="text-center" style="padding-bottom: 20px;">
+        Create New Task
+    </h3>
+
+    <br />
+
+    <form asp-controller="User" asp-action="CreateTask" asp-route-id="@ViewBag.ItemId" method="post">
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" type="text" class="form-control" placeholder="Task Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="Status"></label>
+                    <select asp-for="Status"
+                            class="form-control"
+                            asp-items="Html.GetEnumSelectList<TaskStatus>()">
+                        <option disabled="disabled">Select One</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" type="text" class="form-control" placeholder="Task Description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 20px;">
+            <div class="col-sm">
+                <button type="submit" class="btn btn-primary float-sm-none">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>

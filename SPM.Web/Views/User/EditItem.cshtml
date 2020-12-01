@@ -1,0 +1,41 @@
+﻿@model Item
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Edit Item";
+}
+
+<div class="container rounded box-shadow border border-dark"
+     style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+    <h3 class="text-center" style="padding-bottom: 20px;">
+        Edit Item
+    </h3>
+
+    <br />
+
+    <form asp-controller="User" asp-action="EditItem" asp-route-id="@Model.Id" method="post">
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" type="text" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" type="text" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>

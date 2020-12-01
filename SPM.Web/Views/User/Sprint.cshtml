@@ -1,0 +1,191 @@
+﻿@using TaskStatus = SPM.Web.Models.TaskStatus
+@using Task = SPM.Web.Models.Task
+@model SPM.Web.Models.ViewModels.SprintView
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = $"Sprint - {Model.Sprint.Name}";
+}
+
+<div class="container rounded box-shadow border border-dark"
+     style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+    <h3 class="text-center" style="padding-bottom: 20px;">
+        @Model.Sprint.Name
+    </h3>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-sm">
+        <div class="container rounded box-shadow border border-dark"
+             style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+            <h3 class="text-center">
+                Items
+            </h3>
+        </div>
+        <div class="container rounded box-shadow border border-dark">
+            <table class="table table-borderless table-responsive-sm">
+                <thead>
+                <tr class="border-bottom border-dark">
+                    <th scope="col">Item</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>
+                            <a data-toggle="tooltip" title="@item.Item.Description">
+                                @item.Item.Name
+                            </a>
+                        </td>
+                        <td>
+                            @if (item.Item.Status == ItemStatus.InProgress)
+                            {
+                                <span class="badge badge-primary">In Progress</span>
+                            }
+                            else if (item.Item.Status == ItemStatus.Blocked)
+                            {
+                                <span class="badge badge-danger">Blocked</span>
+                            }
+                            else if (item.Item.Status == ItemStatus.Pending)
+                            {
+                                <span class="badge badge-warning">Pending</span>
+                            }
+                            else if (item.Item.Status == ItemStatus.Complete)
+                            {
+                                <span class="badge badge-success">Completed</span>
+                            }
+                        </td>
+                        <td>
+                            @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
+                            {
+                                <a asp-action="EditItem" asp-route-id="@item.Item.Id"
+                                   class="btn btn-warning" data-toggle="tooltip" title="Edit Item">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            }
+                            <a asp-action="CreateTask" asp-route-id="@item.Item.Id"
+                               class="btn btn-primary" data-toggle="tooltip" title="Create Task">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    @if (item.Tasks.Any())
+                    {
+                        <tr>
+                            <th colspan="3"><hr/></th>
+                        </tr>
+                        <tr class="border-bottom border-dark">
+                            <td colspan="3" class="text-center">
+                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                        data-target="#tasks-@item.Item.Id" aria-expanded="false" aria-controls="tasks-@item.Item.Id">
+                                    View Tasks <i class="fas fa-angle-double-down"></i>
+                                </button>
+                                <br/>
+                                <div class="collapse" id="tasks-@item.Item.Id">
+                                    <div class="card card-body">
+                                        <table class="table table-borderless table-responsive-sm">
+                                            <tbody>
+                                            @foreach (var task in item.Tasks)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <a data-toggle="tooltip" title="@task.Description">
+                                                            @task.Name
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        @if (task.Status == TaskStatus.InProgress)
+                                                        {
+                                                            <span class="badge badge-primary">In Progress</span>
+                                                        }
+                                                        else if (task.Status == TaskStatus.Blocked)
+                                                        {
+                                                            <span class="badge badge-danger">Blocked</span>
+                                                        }
+                                                        else if (task.Status == TaskStatus.Pending)
+                                                        {
+                                                            <span class="badge badge-warning">Pending</span>
+                                                        }
+                                                        else if (task.Status == TaskStatus.Complete)
+                                                        {
+                                                            <span class="badge badge-success">Completed</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
+                                                        {
+                                                            <a asp-action="EditTask" asp-route-id="@task.Id"
+                                                               class="btn btn-warning" data-toggle="tooltip" title="Edit Task">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-sm-4" style="margin-left: 20px;">
+        <div class="container rounded box-shadow border border-dark"
+             style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+            <h3 class="text-center border-bottom border-dark" style="padding-bottom: 20px;">
+                Sprint Information
+            </h3>
+            <table class="table table-borderless table-responsive-sm">
+                <tbody>
+                    <tr>
+                        <td>Total Tasks</td>
+                        <td>@ViewBag.Tasks</td>
+                    </tr>
+                    <tr>
+                        <td>Pending Tasks</td>
+                        <td>@ViewBag.PendingTasks</td>
+                    </tr>
+                    <tr>
+                        <td>In Progress Tasks</td>
+                        <td>@ViewBag.InProgressTasks</td>
+                    </tr>
+                    <tr>
+                        <td>Blocked Tasks</td>
+                        <td>@ViewBag.BlockedTasks</td>
+                    </tr>
+                    <tr>
+                        <td>Completed Tasks</td>
+                        <td>@ViewBag.CompletedTasks</td>
+                    </tr>
+                    @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
+                    {
+                        <tr>
+                            <td>
+                                <a class="btn btn-primary" asp-action="CreateItem" asp-route-id="@Model.Sprint.Id"
+                                   data-toggle="tooltip" title="Create Item">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a class="btn btn-warning" asp-action="EditSprint" asp-route-id="@Model.Sprint.Id"
+                                   data-toggle="tooltip" title="Edit Sprint">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

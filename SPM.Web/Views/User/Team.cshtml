@@ -1,0 +1,144 @@
+﻿@model Team
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = $"Team - {Model.Name}";
+}
+
+<div class="container rounded box-shadow border border-dark"
+     style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+    <h3 class="text-center" style="padding-bottom: 20px;">
+        Team Dashboard
+    </h3>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-sm">
+        <div class="container rounded box-shadow border border-dark"
+             style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+            <h3 class="text-center">
+                Sprints
+            </h3>
+        </div>
+
+        @if (ViewBag.Sprints.Count > 0)
+        {
+            <div class="container rounded box-shadow border border-dark"
+                 style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+                <table class="table table-borderless table-responsive-sm text-center">
+                    <thead>
+                        <tr class="border-bottom border-dark">
+                            <th scope="col">Name</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Dates</th>
+                            @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
+                            {
+                                <th scope="col">Actions</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sprint in ViewBag.Sprints)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-controller="User" asp-action="Sprint" asp-route-id="@sprint.Id"
+                                       data-toggle="tooltip" title="View Sprint">
+                                        @sprint.Name
+                                    </a>
+                                </td>
+                                <td>
+                                    @if (sprint.Status == SprintStatus.Active)
+                                    {
+                                        <span class="badge badge-primary">Active</span>
+                                    }
+                                    else if (sprint.Status == SprintStatus.Inactive)
+                                    {
+                                        <span class="badge badge-danger">Inactive</span>
+                                    }
+                                    else if (sprint.Status == SprintStatus.Extended)
+                                    {
+                                        <span class="badge badge-warning">Extended</span>
+                                    }
+                                    else if (sprint.Status == SprintStatus.Complete)
+                                    {
+                                        <span class="badge badge-success">Completed</span>
+                                    }
+                                </td>
+                                <td>
+                                    @sprint.StartDate.ToString("MM/dd/yyyy") - @sprint.EndDate.ToString("MM/dd/yyyy")
+                                </td>
+                                <td>
+                                    @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
+                                    {
+                                        <a asp-controller="Admin" asp-action="SprintMembers" asp-route-id="@sprint.Id"
+                                           data-toggle="tooltip" title="Edit Sprint Members" class="btn btn-warning">
+                                            <i class="fas fa-users-cog"></i>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="container border border-dark rounded box-shadow">
+                <h5 class="card-title">No Sprints Found, if you believe this is an error please contact your site administrator.</h5>
+            </div>
+        }
+    </div>
+    <div class="col-sm-4" style="margin-left: 20px;">
+        <div class="container rounded box-shadow border border-dark"
+             style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+            <h3 class="text-center border-bottom border-dark" style="padding-bottom: 20px;">
+                Team Information
+            </h3>
+            <table class="table table-borderless table-responsive-sm">
+                <tbody>
+                    <tr>
+                        <td>Users</td>
+                        <td>@ViewBag.Users</td>
+                    </tr>
+                    <tr>
+                        <td>Active Sprints</td>
+                        <td>@ViewBag.ActiveSprints</td>
+                    </tr>
+                    <tr>
+                        <td>Inactive Sprints</td>
+                        <td>@ViewBag.InactiveSprints</td>
+                    </tr>
+                    <tr>
+                        <td>Extended Sprints</td>
+                        <td>@ViewBag.ExtendedSprints</td>
+                    </tr>
+                    <tr>
+                        <td>Completed Sprints</td>
+                        <td>@ViewBag.CompletedSprints</td>
+                    </tr>
+                    @if (User.IsInRole("Maintainer") || User.IsInRole("Administrator"))
+                    {
+                        <tr>
+                            <td>
+                                <a class="btn btn-warning" asp-action="CreateSprint" asp-route-id="@Model.Id"
+                                   data-toggle="tooltip" title="Create Sprint">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a class="btn btn-warning" asp-action="EditTeam" asp-route-id="@Model.Id"
+                                   data-toggle="tooltip" title="Edit Team">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

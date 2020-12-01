@@ -1,0 +1,82 @@
+﻿@{
+    Layout = "HomeLayout";
+    ViewData["Title"] = "Home";
+}
+
+<div class="container rounded box-shadow border border-dark" style="padding-top: 20px; padding-bottom: 20px;">
+    <h2 class="text-center">Simple Project Management</h2>
+</div>
+
+<br />
+<br />
+
+@if (ViewBag.setup)
+{
+    <div class="container rounded box-shadow border border-dark bg-danger" style="padding-top: 20px; padding-bottom: 20px;">
+        <h2 class="text-center">Setup Required!</h2>
+        <hr/>
+        <p class="text-center">
+            Please register your administrative account, it will automatically be added to the administrator role.
+        </p>
+    </div>
+
+    <br />
+    <br />
+}
+
+<div class="container">
+    <div class="row text-center">
+        <div class="col-sm rounded box-shadow border border-dark" 
+             style="margin-right: 10px; padding-top: 20px; padding-bottom: 20px;">
+            <h3><i class="fas fa-chart-bar"></i> Features</h3>
+            <br />
+            The name says it all, SPM is your simple lightweight solution to your project management needs.
+        </div>
+        <div class="col-sm rounded box-shadow border border-dark" style="margin-left: 10px; padding-top: 20px;
+                                         padding-bottom: 20px;">
+            <h3><i class="fas fa-cogs"></i> Installation</h3>
+            <br />
+            A simple <b>docker pull</b>, any web server, and a mysql server and you'll be up and running in no time!
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+
+<div class="container rounded box-shadow text-center justify-content-center border border-dark"
+     style="padding-top: 20px; padding-bottom: 20px;">
+    <h3><i class="fas fa-sitemap"></i> Releases and Dependencies</h3>
+    <br />
+    <table class="table table-borderless table-responsive-sm">
+        <tbody>
+            <tr class="border-bottom border-top border-dark">
+                <td>Releases</td>
+                <td>Docker or Github</td>
+            </tr>
+            <tr class="border-bottom border-dark">
+                <td>Docker</td>
+                <td>Download</td>
+            </tr>
+            <tr class="border-bottom border-dark">
+                <td>Web Server</td>
+                <td>Nginx or Apache</td>
+            </tr>
+            <tr>
+                <td>MySQL</td>
+                <td>Download</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<br />
+<br />
+
+<div class="container rounded box-shadow text-center border border-dark"
+     style="margin-bottom: 100px; padding-top: 20px; padding-bottom: 20px;">
+    <h3><i class="fas fa-code-branch"></i> Contributing</h3>
+    <br />
+    This project is open source on github, feel free to contribute to this project.
+</div>
+

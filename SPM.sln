@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{94568271-44B0-490C-ACC1-62305985D5B1}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		azure-pipelines.yml = azure-pipelines.yml
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SPM.Web", "SPM.Web\SPM.Web.csproj", "{4D7FB130-C17E-4045-AD57-16C75DB8CF15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPM.Test", "SPM.Test\SPM.Test.csproj", "{A017B0B2-2304-400D-8CF6-C84C48A4DB6F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D7FB130-C17E-4045-AD57-16C75DB8CF15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D7FB130-C17E-4045-AD57-16C75DB8CF15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D7FB130-C17E-4045-AD57-16C75DB8CF15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D7FB130-C17E-4045-AD57-16C75DB8CF15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A017B0B2-2304-400D-8CF6-C84C48A4DB6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A017B0B2-2304-400D-8CF6-C84C48A4DB6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A017B0B2-2304-400D-8CF6-C84C48A4DB6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A017B0B2-2304-400D-8CF6-C84C48A4DB6F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1BDC359B-A02B-4C72-A9ED-A3EEDE9F31F6}
+	EndGlobalSection
+EndGlobal
