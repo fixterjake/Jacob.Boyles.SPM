@@ -10,44 +10,6 @@ namespace SPM.Web.Data
     public static class SeedData
     {
         /// <summary>
-        /// Function to add default application settings
-        /// </summary>
-        /// <param name="context">Database context</param>
-        public static async void SeedSettings(ApplicationDbContext context)
-        {
-            try
-            {
-                // Check if settings already exist
-                if (!context.Settings.Any())
-                {
-                    // Add various settings to the database context
-                    await context.Settings.AddAsync(new Settings
-                    {
-                        Name = "FirstTimeSetup",
-                        Value = true.ToString()
-                    });
-
-                    await context.Settings.AddAsync(new Settings
-                    {
-                        Name = "AzureConnectionString"
-                    });
-
-                    await context.Settings.AddAsync(new Settings
-                    {
-                        Name = "SendgridKey"
-                    });
-
-                    // Save database changes
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        /// <summary>
         /// Function to create default roles
         /// </summary>
         /// <param name="roleManager">Role manager service</param>

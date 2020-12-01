@@ -8,21 +8,19 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace SPM.Web.Services
 {
     public class BlobStorageService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
         private readonly string _connectionString;
 
-        public BlobStorageService(ApplicationDbContext context)
+        public BlobStorageService(IConfiguration configuration)
         {
-            _context = context;
-            _connectionString = _context.Settings
-                .Where(x => x.Name == "AzureConnectionString")
-                .Select(x => x.Value)
-                .FirstOrDefault();
+            _configuration = configuration;
+            _connectionString = _configuration.GetValue<string>("AzureConnectionString");
         }
 
         /// <summary>
@@ -39,7 +37,7 @@ namespace SPM.Web.Services
                 var client = new BlobServiceClient(_connectionString);
 
                 // Get the teams storage container
-                var container = client.GetBlobContainerClient("teams");
+                var container = client.GetBlobContainerClient(_configuration.GetValue<string>("AzureContainerName"));
 
                 // Get reference to blob
                 var blob = container.GetBlobClient($"{file.GetHashCode()}-{file.FileName}");
@@ -54,6 +52,25 @@ namespace SPM.Web.Services
             {
                 Console.WriteLine(ex.Message);
                 return string.Empty;
+            }
+        }
+
+        public async Task DeleteFile(string name)
+        {
+            try
+            {
+                // Create azure storage client
+                var client = new BlobServiceClient(_connectionString);
+
+                // Get the teams storage container
+                var container = client.GetBlobContainerClient(_configuration.GetValue<string>("AzureContainerName"));
+
+                // Delete blob from storage container
+                await container.DeleteBlobAsync(name);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
     }
