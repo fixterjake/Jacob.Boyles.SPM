@@ -50,31 +50,15 @@ namespace SPM.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ItemComments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ItemId = table.Column<int>(nullable: false),
-                    MemberId = table.Column<int>(nullable: false),
-                    Comment = table.Column<string>(nullable: true),
-                    Created = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ItemComments", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Items",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     SprintId = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    Time = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
+                    Estimated = table.Column<bool>(nullable: false),
                     Status = table.Column<int>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false)
                 },
@@ -89,8 +73,9 @@ namespace SPM.Web.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
+                    TeamId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false),
                     Status = table.Column<int>(nullable: false),
@@ -102,30 +87,16 @@ namespace SPM.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TaskComments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    TaskId = table.Column<int>(nullable: false),
-                    MemberId = table.Column<int>(nullable: false),
-                    Comment = table.Column<string>(nullable: true),
-                    Created = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TaskComments", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Tasks",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
                     ItemId = table.Column<int>(nullable: false),
+                    SprintId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Time = table.Column<int>(nullable: false),
                     Status = table.Column<int>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false)
                 },
@@ -135,28 +106,14 @@ namespace SPM.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TeamPermissions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(nullable: false),
-                    TeamId = table.Column<int>(nullable: false),
-                    Permissions = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TeamPermissions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Teams",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
                     CreatorId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
                     Image = table.Column<string>(nullable: true),
                     Created = table.Column<DateTime>(nullable: false)
                 },
@@ -387,22 +344,13 @@ namespace SPM.Web.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ItemComments");
-
-            migrationBuilder.DropTable(
                 name: "Items");
 
             migrationBuilder.DropTable(
                 name: "Sprints");
 
             migrationBuilder.DropTable(
-                name: "TaskComments");
-
-            migrationBuilder.DropTable(
                 name: "Tasks");
-
-            migrationBuilder.DropTable(
-                name: "TeamPermissions");
 
             migrationBuilder.DropTable(
                 name: "Teams");

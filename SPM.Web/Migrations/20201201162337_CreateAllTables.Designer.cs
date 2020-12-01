@@ -9,14 +9,14 @@ using SPM.Web.Data;
 namespace SPM.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201019065035_Stuff")]
-    partial class Stuff
+    [Migration("20201201162337_CreateAllTables")]
+    partial class CreateAllTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.9")
+                .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -131,6 +131,9 @@ namespace SPM.Web.Migrations
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<bool>("Estimated")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -141,35 +144,9 @@ namespace SPM.Web.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("Time")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Items");
-                });
-
-            modelBuilder.Entity("SPM.Web.Models.ItemComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ItemComments");
                 });
 
             modelBuilder.Entity("SPM.Web.Models.Role", b =>
@@ -197,23 +174,6 @@ namespace SPM.Web.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
-                });
-
-            modelBuilder.Entity("SPM.Web.Models.Settings", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("SPM.Web.Models.Sprint", b =>
@@ -265,41 +225,21 @@ namespace SPM.Web.Migrations
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<int>("SprintId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<int>("Time")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.ToTable("Tasks");
-                });
-
-            modelBuilder.Entity("SPM.Web.Models.TaskComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TaskComments");
                 });
 
             modelBuilder.Entity("SPM.Web.Models.Team", b =>
@@ -328,26 +268,6 @@ namespace SPM.Web.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Teams");
-                });
-
-            modelBuilder.Entity("SPM.Web.Models.TeamPermissions", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("Permissions")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TeamPermissions");
                 });
 
             modelBuilder.Entity("SPM.Web.Models.User", b =>

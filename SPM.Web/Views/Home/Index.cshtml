@@ -10,6 +10,20 @@
 <br />
 <br />
 
+@if (ViewBag.setup)
+{
+    <div class="container rounded box-shadow border border-dark bg-danger" style="padding-top: 20px; padding-bottom: 20px;">
+        <h2 class="text-center">Setup Required!</h2>
+        <hr/>
+        <p class="text-center">
+            Please register your administrative account, it will automatically be added to the administrator role.
+        </p>
+    </div>
+
+    <br />
+    <br />
+}
+
 <div class="container">
     <div class="row text-center">
         <div class="col-sm rounded box-shadow border border-dark" 

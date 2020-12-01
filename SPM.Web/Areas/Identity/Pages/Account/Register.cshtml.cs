@@ -12,9 +12,12 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using SPM.Web.Data;
 using SPM.Web.Models;
 using SPM.Web.Services;
+using ZDC.Web.Extensions;
 using Task = System.Threading.Tasks.Task;
 
 namespace SPM.Web.Areas.Identity.Pages.Account
@@ -26,17 +29,23 @@ namespace SPM.Web.Areas.Identity.Pages.Account
         private readonly UserManager<User> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
 
         public RegisterModel(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ApplicationDbContext context,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
+            _configuration = configuration;
         }
 
         [BindProperty]
@@ -52,6 +61,11 @@ namespace SPM.Web.Areas.Identity.Pages.Account
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Username")]
+            public string Username { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -92,15 +106,25 @@ namespace SPM.Web.Areas.Identity.Pages.Account
                         protocol: Request.Scheme);
 
                     await AmazonEmailService.SendEmail(
-                        "Jacob@fixterjake.com",
+                        _configuration.GetValue<string>("EmailSender"),
                         Input.Email,
                         "Confirm Email - Simple Project Management",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
                         $"Please confirm your account by clicking, or copying and pasting this URL into your browser: {HtmlEncoder.Default.Encode(callbackUrl)}.");
 
+                    // Add to administrator role if this is the first user
+                    if (_context.Users.Count() == 1)
+                    {
+                        // Get user
+                        var firstUser = _context.Users.First();
+
+                        // Add user to administrator role
+                        await _userManager.AddToRoleAsync(firstUser, "Administrator");
+                    }
+
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToAction("Index", "Home").WithSuccess("Success", "Please check your email to confirm your account");
                     }
                     else
                     {

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="container secondary rounded box-shadow text-center border border-dark text-white"
+<div class="container secondary rounded box-shadow text-center border border-dark text-dark"
      style="margin-bottom: 100px; padding-top: 20px; padding-bottom: 20px;">
     <h3 class="border-bottom border-white" style="padding-bottom: 20px;">
         <i class="fas fa-plus-square"></i> Register
@@ -17,12 +17,17 @@
                 <h4>
                     Create a new account.
                 </h4>
-                <br/>
+                <br />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Input.Email"></label>
                     <input asp-for="Input.Email" class="form-control" />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Username"></label>
+                    <input asp-for="Input.Username" class="form-control" />
+                    <span asp-validation-for="Input.Username" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.Password"></label>
