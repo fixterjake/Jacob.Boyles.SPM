@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using SPM.Web.Data;
 using SPM.Web.Models;
 
@@ -31,7 +33,14 @@ namespace SPM.Web.Controllers
         /// <returns>Index view</returns>
         public IActionResult Index()
         {
-            if (_signInManager.IsSignedIn(User)) Redirect("/user");
+            // If first time setup has not happened, display message to register
+            ViewBag.setup = !_context.Users.Any();
+
+            // If user is signed in direct them to the teams dashboard
+            if (_signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             return View();
         }

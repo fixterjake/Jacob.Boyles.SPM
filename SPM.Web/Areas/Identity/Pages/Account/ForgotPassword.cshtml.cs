@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 using SPM.Web.Models;
 using SPM.Web.Services;
 
@@ -20,11 +21,13 @@ namespace SPM.Web.Areas.Identity.Pages.Account
     {
         private readonly UserManager<User> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _configuration;
 
-        public ForgotPasswordModel(UserManager<User> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<User> userManager, IEmailSender emailSender, IConfiguration configuration)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _configuration = configuration;
         }
 
         [BindProperty]
@@ -59,7 +62,7 @@ namespace SPM.Web.Areas.Identity.Pages.Account
                     protocol: Request.Scheme);
 
                 await AmazonEmailService.SendEmail(
-                    "Jacob@fixterjake.com",
+                    _configuration.GetValue<string>("EmailSender"),
                     Input.Email,
                     "Reset Password - Simple Project Management",
                     $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
