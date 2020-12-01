@@ -34,7 +34,7 @@ Relational Database: [MySQL Server](https://dev.mysql.com/downloads/mysql/).
 1. Clone the repository from github
 2. Create a new file `appsettings.json` and copy the json from appsettings.example.json
 3. Fill out all the fields in `appsettings.json`
-4. Change into the project director and un `dotnet-ef database update` (This will use the connection string from `appsettings.json`)
+4. Change into the project directory and run `dotnet-ef database update` (This will use the connection string from `appsettings.json`)
 5. Run `dotnet publish`, and copy the output to your location of choice
 6. Setup your web server
 7. Perform first time setup, and you're done!'
