@@ -19,4 +19,21 @@ It will also include permissions for adding members to sprints, items, and tasks
 Base Web Framework: [ASP.Net Core](https://dotnet.microsoft.com/apps/aspnet).  
 Database Framework: [Entity Framework](https://docs.microsoft.com/en-us/ef/).  
 User Management: [ASP.Net Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-3.1&tabs=visual-studio).  
-Relational Database: [MySQL Server](https://dev.mysql.com/downloads/mysql/).  
+Relational Database: [MySQL Server](https://dev.mysql.com/downloads/mysql/).
+
+## Requirements
+
+- Windows or Linux
+- Web server of your choice (Must support proxy)
+- MySQL
+- Dotnet 5 SDK
+- Entity framework Dotnet CLI tool
+
+## Deployment
+1. Clone the repository from github
+2. Create a new file `appsettings.json` and copy the json from appsettings.example.json
+3. Fill out all the fields in `appsettings.json`
+4. Run `dotnet-ef migration add CreateAllTables`, then `dotnet-ef database update` (This will use the connection string from `appsettings.json`)
+5. Run `dotnet publish`, and copy the output to your location of choice
+6. Setup your web server
+7. Perform first time setup, and you're done!'

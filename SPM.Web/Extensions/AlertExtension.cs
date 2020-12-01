@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ZDC.Web.Extensions
 {
     public static class AlertExtensions
     {
         /// <summary>
-        /// Function to show success alert
+        ///     Function to show success alert
         /// </summary>
         /// <param name="result">Result</param>
         /// <param name="title">Title</param>
@@ -21,7 +17,7 @@ namespace ZDC.Web.Extensions
         }
 
         /// <summary>
-        /// Function to show info alert
+        ///     Function to show info alert
         /// </summary>
         /// <param name="result">Result</param>
         /// <param name="title">Title</param>
@@ -33,7 +29,7 @@ namespace ZDC.Web.Extensions
         }
 
         /// <summary>
-        /// Function to show warning alert
+        ///     Function to show warning alert
         /// </summary>
         /// <param name="result">Result</param>
         /// <param name="title">Title</param>
@@ -45,7 +41,7 @@ namespace ZDC.Web.Extensions
         }
 
         /// <summary>
-        /// Function to show danger alert
+        ///     Function to show danger alert
         /// </summary>
         /// <param name="result">Result</param>
         /// <param name="title">Title</param>
@@ -57,7 +53,7 @@ namespace ZDC.Web.Extensions
         }
 
         /// <summary>
-        /// Function to show alert
+        ///     Function to show alert
         /// </summary>
         /// <param name="result">Result</param>
         /// <param name="type">type</param>

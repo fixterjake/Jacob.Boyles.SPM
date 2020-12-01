@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.TagHelpers.Cache;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SPM.Web.Data;
 using SPM.Web.Models;
@@ -24,17 +19,20 @@ namespace SPM.Web.Controllers
     [Authorize]
     public class UserController : Controller
     {
-        // Database context
-        private readonly ApplicationDbContext _context;
-        // User manager
-        private readonly UserManager<User> _userManager;
-        // Blob storage service
-        private readonly BlobStorageService _storageService;
-        // Confirgation
+        // Configuration
         private readonly IConfiguration _configuration;
 
+        // Database context
+        private readonly ApplicationDbContext _context;
+
+        // Blob storage service
+        private readonly BlobStorageService _storageService;
+
+        // User manager
+        private readonly UserManager<User> _userManager;
+
         /// <summary>
-        /// User manager constructor
+        ///     User manager constructor
         /// </summary>
         /// <param name="context">Database context</param>
         /// <param name="userManager">User manager</param>
@@ -47,7 +45,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show index view
+        ///     Function to show index view
         /// </summary>
         /// <returns>Index view</returns>
         public async Task<IActionResult> Index()
@@ -71,7 +69,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show create team view
+        ///     Function to show create team view
         /// </summary>
         /// <returns>Create team view</returns>
         public IActionResult CreateTeam()
@@ -80,17 +78,14 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Create team post endpoint to create a team
+        ///     Create team post endpoint to create a team
         /// </summary>
         /// <param name="team">Model bound team from form</param>
         /// <returns>Create team view if invalid data, or show the team that was created</returns>
         [HttpPost]
         public async Task<IActionResult> CreateTeam([Bind("Name,Description,FormImage")] Team team)
         {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
+            if (!ModelState.IsValid) return View();
 
             // Get creator's user id for use in object creation
             var creator = int.Parse(_userManager.GetUserId(User));
@@ -103,7 +98,6 @@ namespace SPM.Web.Controllers
             // and upload if it is not null
             if (team.FormImage != null)
             {
-
                 // Upload the image and get the url result and assign it to the team image field
                 team.Image = await _storageService.UploadFile(team.FormImage);
 
@@ -140,7 +134,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show a specific team
+        ///     Function to show a specific team
         /// </summary>
         /// <param name="id">Id of team to show</param>
         /// <returns>Team view</returns>
@@ -150,10 +144,7 @@ namespace SPM.Web.Controllers
             var team = _context.Teams.FirstOrDefault(x => x.Id == id);
 
             // If team is null redirect back with error message
-            if (team == null)
-            {
-                return Redirect("/user").WithDanger("Error", "Team not found.");
-            }
+            if (team == null) return Redirect("/user").WithDanger("Error", "Team not found.");
 
             // Get user id
             var userId = int.Parse(_userManager.GetUserId(User));
@@ -164,10 +155,7 @@ namespace SPM.Web.Controllers
                 .FirstOrDefault(x => x.UserId == userId);
 
             // If association was not found, redirect back with error message
-            if (userTeam == null)
-            {
-                return Redirect("/user").WithDanger("Error", "Team not found.");
-            }
+            if (userTeam == null) return Redirect("/user").WithDanger("Error", "Team not found.");
 
             // Get number of users in team
             ViewBag.Users = _context.UserTeams.Count(x => x.TeamId == team.Id);
@@ -196,8 +184,8 @@ namespace SPM.Web.Controllers
             ViewBag.Sprints = _context.Sprints
                 .Where(x => x.TeamId == team.Id)
                 .Where(x => x.Status == SprintStatus.Active
-                                ||x.Status == SprintStatus.Inactive
-                                ||x.Status == SprintStatus.Extended)
+                            || x.Status == SprintStatus.Inactive
+                            || x.Status == SprintStatus.Extended)
                 .OrderBy(x => x.StartDate)
                 .ToList();
 
@@ -206,7 +194,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show the edit team view
+        ///     Function to show the edit team view
         /// </summary>
         /// <param name="id">Id of team to edit</param>
         [Authorize(Roles = "Administrator,Maintainer")]
@@ -220,7 +208,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Edit team endpoint
+        ///     Edit team endpoint
         /// </summary>
         /// <param name="input">Model bound team from edit form</param>
         /// <param name="id">Id of team to edit</param>
@@ -229,10 +217,7 @@ namespace SPM.Web.Controllers
         public async Task<IActionResult> EditTeam([Bind("Name,FormImage,Description")] Team input, int id)
         {
             // Ensure data is valid
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
+            if (!ModelState.IsValid) return View();
 
             // Get team
             var team = _context.Teams.FirstOrDefault(x => x.Id == id);
@@ -267,7 +252,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show create sprint view
+        ///     Function to show create sprint view
         /// </summary>
         /// <param name="id">Team id for use in form</param>
         /// <returns>Create sprint view</returns>
@@ -278,13 +263,14 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Create sprint post endpoint for sprint creation
+        ///     Create sprint post endpoint for sprint creation
         /// </summary>
         /// <param name="sprint">Model bound sprint from form</param>
         /// <param name="id">Team id for use in sprint creation</param>
         /// <returns>Create sprint view if invalid data, or show the sprint</returns>
         [HttpPost]
-        public async Task<IActionResult> CreateSprint([Bind("Name,Description,Status,StartDate,EndDate")] Sprint sprint, int id)
+        public async Task<IActionResult> CreateSprint([Bind("Name,Description,Status,StartDate,EndDate")]
+            Sprint sprint, int id)
         {
             // Check if returned data is valid
             if (!ModelState.IsValid)
@@ -325,7 +311,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show a specific sprint view
+        ///     Function to show a specific sprint view
         /// </summary>
         /// <param name="id">Id of sprint to view</param>
         /// <returns>Sprint view</returns>
@@ -335,10 +321,7 @@ namespace SPM.Web.Controllers
             var sprint = _context.Sprints.FirstOrDefault(x => x.Id == id);
 
             // If sprint not found redirect back with error
-            if (sprint == null)
-            {
-                return Redirect("/user").WithDanger("Error", "Sprint not found");
-            }
+            if (sprint == null) return Redirect("/user").WithDanger("Error", "Sprint not found");
 
             // Get creator's user id to check if user can view sprint
             var user = int.Parse(_userManager.GetUserId(User));
@@ -349,10 +332,7 @@ namespace SPM.Web.Controllers
                 .FirstOrDefault(x => x.UserId == user);
 
             // If not found redirect back with error
-            if (userSprint == null)
-            {
-                return Redirect("/user").WithDanger("Error", "Sprint not found");
-            }
+            if (userSprint == null) return Redirect("/user").WithDanger("Error", "Sprint not found");
 
             // Get all items within sprint
             var items = _context.Items
@@ -364,8 +344,7 @@ namespace SPM.Web.Controllers
 
             // Populate item views
             foreach (var item in items)
-            {
-                itemViews.Add(new ItemView 
+                itemViews.Add(new ItemView
                     {
                         Item = item,
                         Tasks = _context.Tasks
@@ -373,7 +352,6 @@ namespace SPM.Web.Controllers
                             .ToList()
                     }
                 );
-            }
 
             // Create sprint view model
             var sprintView = new SprintView
@@ -427,7 +405,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show the edit sprint view
+        ///     Function to show the edit sprint view
         /// </summary>
         /// <param name="id">Id of sprint to edit</param>
         [Authorize(Roles = "Administrator,Maintainer")]
@@ -441,19 +419,17 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Endpoint to edit sprint
+        ///     Endpoint to edit sprint
         /// </summary>
         /// <param name="input">Model bound sprint data from form</param>
         /// <param name="id">Id of sprint to edit</param>
         [HttpPost]
         [Authorize(Roles = "Administrator,Maintainer")]
-        public async Task<IActionResult> EditSprint([Bind("Name,StartDate,EndDate,Status,Description")] Sprint input, int id)
+        public async Task<IActionResult> EditSprint([Bind("Name,StartDate,EndDate,Status,Description")]
+            Sprint input, int id)
         {
             // Ensure data is valid
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
+            if (!ModelState.IsValid) return View();
 
             // Get sprint
             var sprint = _context.Sprints.FirstOrDefault(x => x.Id == id);
@@ -480,7 +456,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show create item view
+        ///     Function to show create item view
         /// </summary>
         /// <param name="id">Id of sprint for use in form</param>
         /// <returns>Create item form</returns>
@@ -491,13 +467,14 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Create item post endpoint 
+        ///     Create item post endpoint
         /// </summary>
         /// <param name="item">Model bound item from form</param>
         /// <param name="id">Sprint id for use in item creation</param>
         /// <returns>Create item view if data is invalid, or show the item</returns>
         [HttpPost]
-        public async Task<IActionResult> CreateItem([Bind("Name,Description,Status,StartDate,EndDate")] Item item, int id)
+        public async Task<IActionResult> CreateItem([Bind("Name,Description,Status,StartDate,EndDate")]
+            Item item, int id)
         {
             // Check if returned data is valid
             if (!ModelState.IsValid)
@@ -538,7 +515,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show the edit item view
+        ///     Function to show the edit item view
         /// </summary>
         /// <param name="id">Id of item to edit</param>
         [Authorize(Roles = "Administrator,Maintainer")]
@@ -552,7 +529,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Endpoint to receive the edit item data
+        ///     Endpoint to receive the edit item data
         /// </summary>
         /// <param name="input">Model bound item data from form</param>
         /// <param name="id">Id of item to edit</param>
@@ -561,10 +538,7 @@ namespace SPM.Web.Controllers
         public async Task<IActionResult> EditItem([Bind("Name,Description")] Item input, int id)
         {
             // Ensure data is valid
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
+            if (!ModelState.IsValid) return View();
 
             // Find item
             var item = _context.Items.FirstOrDefault(x => x.Id == id);
@@ -588,7 +562,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show create task form
+        ///     Function to show create task form
         /// </summary>
         /// <param name="id">Item id for use in form</param>
         /// <returns>Create task view</returns>
@@ -599,7 +573,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Create task endpoint
+        ///     Create task endpoint
         /// </summary>
         /// <param name="task">Model bound task from form</param>
         /// <param name="id">Item id for use in task creation</param>
@@ -618,10 +592,7 @@ namespace SPM.Web.Controllers
             var item = _context.Items.FirstOrDefault(x => x.Id == id);
 
             // Set other fields of task from form
-            if (item != null)
-            {
-                task.SprintId = item.SprintId;
-            }
+            if (item != null) task.SprintId = item.SprintId;
             task.ItemId = id;
             task.Created = DateTime.Now;
 
@@ -636,7 +607,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show the edit task view
+        ///     Function to show the edit task view
         /// </summary>
         /// <param name="id">Id of task to edit</param>
         [Authorize(Roles = "Administrator,Maintainer")]
@@ -650,7 +621,7 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Endpoint to receive edited task data
+        ///     Endpoint to receive edited task data
         /// </summary>
         /// <param name="input">Model bound task from form</param>
         /// <param name="id">Id of task to edit</param>
@@ -659,10 +630,7 @@ namespace SPM.Web.Controllers
         public async Task<IActionResult> EditTask([Bind("Name,Status,Description")] Task input, int id)
         {
             // Ensure data is valid
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
+            if (!ModelState.IsValid) return View();
 
             // Try to find task
             var task = _context.Tasks.FirstOrDefault(x => x.Id == id);

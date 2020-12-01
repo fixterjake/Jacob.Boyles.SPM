@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using SPM.Web.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SPM.Web.Data;
 using SPM.Web.Models;
 
 namespace SPM.Web
@@ -47,7 +42,7 @@ namespace SPM.Web
 
                     // User settings
                     options.User.RequireUniqueEmail = true;
-                    
+
                     // Require account confirmation
                     options.SignIn.RequireConfirmedEmail = true;
                     options.SignIn.RequireConfirmedAccount = true;
@@ -60,7 +55,8 @@ namespace SPM.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IConfiguration configuration, IApplicationBuilder app, IWebHostEnvironment env, RoleManager<Role> roleManager)
+        public void Configure(IConfiguration configuration, IApplicationBuilder app, IWebHostEnvironment env,
+            RoleManager<Role> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -87,8 +83,8 @@ namespace SPM.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }

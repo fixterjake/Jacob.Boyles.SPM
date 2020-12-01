@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SPM.Web.Models
 {
     public class Task
     {
-        [Key]
-        public int Id { get; set; }
+        [Key] public int Id { get; set; }
+
         public int ItemId { get; set; }
         public int SprintId { get; set; }
         public string Name { get; set; }
@@ -19,7 +16,7 @@ namespace SPM.Web.Models
         public DateTime Created { get; set; }
 
         /// <summary>
-        /// Returns string value of task status.
+        ///     Returns string value of task status.
         /// </summary>
         /// <returns>String value of status</returns>
         public string GetStatusString()

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
-using SPM.Web.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SPM.Web.Models;
 
 namespace SPM.Web.Data
 {
@@ -18,10 +14,8 @@ namespace SPM.Web.Data
         // Add data sets to entity framework
 
         public DbSet<Item> Items { get; set; }
-        public DbSet<ItemComment> ItemComments { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
         public DbSet<Task> Tasks { get; set; }
-        public DbSet<TaskComment> TaskComments { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<UserItem> UserItems { get; set; }
         public DbSet<UserSprint> UserSprints { get; set; }

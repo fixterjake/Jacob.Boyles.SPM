@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Threading.Tasks;
 using Quartz;
 using Quartz.Impl;
@@ -10,13 +8,18 @@ namespace SPM.Web.Data.Jobs
 {
     public class StartJobs
     {
+        /// <summary>
+        ///     Function to start all jobs for the backend
+        /// </summary>
+        /// <param name="context">Database context</param>
         public static async Task StartAllJobs(ApplicationDbContext context)
         {
             try
             {
+                // Setup quartz job service
                 var props = new NameValueCollection
                 {
-                    { "quartz.serializer.type", "binary" }
+                    {"quartz.serializer.type", "binary"}
                 };
                 var factory = new StdSchedulerFactory(props);
                 var scheduler = await factory.GetScheduler();

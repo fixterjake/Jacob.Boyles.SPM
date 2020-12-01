@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SPM.Web.Models
 {
     public class Sprint
     {
-        [Key]
-        public int Id { get; set; }
+        [Key] public int Id { get; set; }
 
-        [Display(Name = "Team Id")]
-        public int TeamId { get; set; }
+        [Display(Name = "Team Id")] public int TeamId { get; set; }
 
         [Required(ErrorMessage = "Please enter a sprint name.")]
         [DataType(DataType.Text)]
@@ -36,10 +31,11 @@ namespace SPM.Web.Models
 
         [Required(ErrorMessage = "Please select an initial status.")]
         public SprintStatus Status { get; set; }
+
         public DateTime Created { get; set; }
 
         /// <summary>
-        /// Returns string value of sprint status.
+        ///     Returns string value of sprint status.
         /// </summary>
         /// <returns>String value of status</returns>
         public string GetStatusString()

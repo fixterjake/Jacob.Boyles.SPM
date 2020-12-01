@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SPM.Web.Models
 {
     public class Item
     {
-        [Key]
-        public int Id { get; set; }
+        [Key] public int Id { get; set; }
+
         public int SprintId { get; set; }
 
         [Required(ErrorMessage = "Please enter an item name.")]
@@ -27,10 +24,11 @@ namespace SPM.Web.Models
         [Required(ErrorMessage = "Please enter an item name.")]
         [Display(Name = "Status")]
         public ItemStatus Status { get; set; }
+
         public DateTime Created { get; set; }
 
         /// <summary>
-        /// Returns string value of item status.
+        ///     Returns string value of item status.
         /// </summary>
         /// <returns>String value of status</returns>
         public string GetStatusString()

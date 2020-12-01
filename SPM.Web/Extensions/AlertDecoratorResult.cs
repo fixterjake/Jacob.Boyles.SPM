@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,13 +7,8 @@ namespace ZDC.Web.Extensions
 {
     public class AlertDecoratorResult : IActionResult
     {
-        public IActionResult Result { get; }
-        public string Type { get; }
-        public string Title { get; }
-        public string Body { get; }
-
         /// <summary>
-        /// Constructor for alert decorators
+        ///     Constructor for alert decorators
         /// </summary>
         /// <param name="result">Result</param>
         /// <param name="type">type</param>
@@ -30,8 +22,13 @@ namespace ZDC.Web.Extensions
             Body = body;
         }
 
+        public IActionResult Result { get; }
+        public string Type { get; }
+        public string Title { get; }
+        public string Body { get; }
+
         /// <summary>
-        /// Function to execute result
+        ///     Function to execute result
         /// </summary>
         /// <param name="context">The current http context</param>
         /// <returns>Executed result</returns>

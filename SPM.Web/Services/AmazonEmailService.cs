@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Amazon;
 using Amazon.SimpleEmail;
@@ -11,8 +10,8 @@ namespace SPM.Web.Services
     public class AmazonEmailService
     {
         /// <summary>
-        /// Function to send an email using Amazon's simple email service
-        /// This version will only send to one single user
+        ///     Function to send an email using Amazon's simple email service
+        ///     This version will only send to one single user
         /// </summary>
         /// <param name="sender">Email that will send the email</param>
         /// <param name="to">Who to send it to</param>
@@ -20,7 +19,8 @@ namespace SPM.Web.Services
         /// <param name="body">Email HTML body</param>
         /// <param name="textBody">Email text body</param>
         /// <returns>Email send response object</returns>
-        public static async Task<SendEmailResponse> SendEmail(string sender, string to, string subject, string body, string textBody)
+        public static async Task<SendEmailResponse> SendEmail(string sender, string to, string subject, string body,
+            string textBody)
         {
             // Create an Amazon SES client
             using var client = new AmazonSimpleEmailServiceClient(RegionEndpoint.USEast1);
@@ -31,7 +31,7 @@ namespace SPM.Web.Services
                 Source = sender,
                 Destination = new Destination
                 {
-                    ToAddresses = new List<string> { to }
+                    ToAddresses = new List<string> {to}
                 },
                 Message = new Message
                 {
@@ -70,8 +70,8 @@ namespace SPM.Web.Services
         }
 
         /// <summary>
-        /// Function to send an email using Amazon's simple email service
-        /// This version will send to many users
+        ///     Function to send an email using Amazon's simple email service
+        ///     This version will send to many users
         /// </summary>
         /// <param name="sender">Email that will send the email</param>
         /// <param name="to">Who to send it to</param>
@@ -79,7 +79,8 @@ namespace SPM.Web.Services
         /// <param name="body">Email HTML body</param>
         /// <param name="textBody">Email text body</param>
         /// <returns>Email send response object</returns>
-        public static async Task<SendEmailResponse> SendEmail(string sender, List<string> to, string subject, string body, string textBody)
+        public static async Task<SendEmailResponse> SendEmail(string sender, List<string> to, string subject,
+            string body, string textBody)
         {
             // Create an Amazon SES client
             using var client = new AmazonSimpleEmailServiceClient(RegionEndpoint.USEast1);

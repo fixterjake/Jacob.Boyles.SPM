@@ -1,17 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace SPM.Web.Models
 {
     public class Team
     {
-        [Key]
-        public int Id { get; set; }
+        [Key] public int Id { get; set; }
+
         public int CreatorId { get; set; }
 
         [Required(ErrorMessage = "Please enter a name for the team.")]
@@ -23,11 +20,13 @@ namespace SPM.Web.Models
         [DataType(DataType.MultilineText)]
         [Display(Name = "Description")]
         public string Description { get; set; }
+
         public string Image { get; set; }
 
         [NotMapped]
         [Display(Name = "Team Image")]
         public IFormFile FormImage { get; set; }
+
         public DateTime Created { get; set; }
     }
 }

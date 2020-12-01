@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -16,11 +15,14 @@ namespace SPM.Web.Controllers
     [Authorize(Roles = "Administrator,Maintainer")]
     public class AdminController : Controller
     {
+        // Database context
         private readonly ApplicationDbContext _context;
+
+        // User manager service
         private readonly UserManager<User> _userManager;
 
         /// <summary>
-        /// Admin controller constructor
+        ///     Admin controller constructor
         /// </summary>
         /// <param name="context">Database context</param>
         /// <param name="userManager">User manager service</param>
@@ -30,6 +32,9 @@ namespace SPM.Web.Controllers
             _userManager = userManager;
         }
 
+        /// <summary>
+        ///     Function to show the edit roles view
+        /// </summary>
         public async Task<IActionResult> EditRoles()
         {
             // Get all users
@@ -53,6 +58,10 @@ namespace SPM.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        ///     Endpoint for the edit roles post request
+        /// </summary>
+        /// <param name="data">Role view data</param>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditRoles([Bind("UserId,RoleId")] Role data)
@@ -111,6 +120,10 @@ namespace SPM.Web.Controllers
             return View().WithSuccess("Success", "User added to role");
         }
 
+        /// <summary>
+        ///     Function to get a list of users who have roles for displaying
+        /// </summary>
+        /// <returns>List of UserRoles objects</returns>
         public async Task<List<UserRoles>> GetUserRoles()
         {
             // Create empty list
@@ -140,7 +153,6 @@ namespace SPM.Web.Controllers
 
                     // Ensure role existed
                     if (role != null)
-                    {
                         // Add new item to list
                         list.Add(new UserRoles
                         {
@@ -148,14 +160,19 @@ namespace SPM.Web.Controllers
                             RoleId = role.Id,
                             RoleName = role.Name
                         });
-                    }
                 }
             }
-            
+
             // Return list
             return list;
         }
 
+        /// <summary>
+        ///     Function to remove a user from a specified role
+        /// </summary>
+        /// <param name="roleId">Role to remove</param>
+        /// <param name="userId">User to remove the role from</param>
+        /// <returns>Redirects back to the EditRoles view</returns>
         public async Task<IActionResult> RemoveFromRole(int roleId, int userId)
         {
             // Get role
@@ -163,20 +180,14 @@ namespace SPM.Web.Controllers
                 .FirstOrDefault(x => x.Id == roleId);
 
             // Ensure role exists
-            if (role == null)
-            {
-                return RedirectToAction("EditRoles").WithDanger("Error", "Role not found.");
-            }
+            if (role == null) return RedirectToAction("EditRoles").WithDanger("Error", "Role not found.");
 
             // Get user
             var user = _context.Users
                 .FirstOrDefault(x => x.Id == userId);
 
             // Ensure user exists
-            if (user == null)
-            {
-                return RedirectToAction("EditRoles").WithDanger("Error", "User not found.");
-            }
+            if (user == null) return RedirectToAction("EditRoles").WithDanger("Error", "User not found.");
 
             // Remove from role
             await _userManager.RemoveFromRoleAsync(user, role.Name);
