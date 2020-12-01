@@ -23,6 +23,7 @@ namespace SPM.Web.Controllers
         /// Admin controller constructor
         /// </summary>
         /// <param name="context">Database context</param>
+        /// <param name="userManager">User manager service</param>
         public AdminController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;

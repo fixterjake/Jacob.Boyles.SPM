@@ -19,7 +19,6 @@ namespace SPM.Web.Data
 
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemComment> ItemComments { get; set; }
-        public DbSet<Settings> Settings { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
         public DbSet<Task> Tasks { get; set; }
         public DbSet<TaskComment> TaskComments { get; set; }

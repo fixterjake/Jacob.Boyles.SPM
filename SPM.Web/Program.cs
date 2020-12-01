@@ -18,9 +18,6 @@ namespace SPM.Web
             var services = scope.ServiceProvider;
             var context = services.GetRequiredService<ApplicationDbContext>();
 
-            // Seed database with default data
-            SeedData.SeedSettings(context);
-
             // Start all jobs
             StartJobs.StartAllJobs(context).GetAwaiter().GetResult();
 

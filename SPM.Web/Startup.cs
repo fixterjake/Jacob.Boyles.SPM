@@ -29,7 +29,7 @@ namespace SPM.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql("Server=localhost;Database=spm_dev;Uid=root;Pwd=;"));
+                options.UseMySql(Configuration.GetValue<string>("DatabaseConnectionString")));
             services.AddIdentity<User, Role>(options =>
                 {
                     // Password settings
@@ -60,7 +60,7 @@ namespace SPM.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<Role> roleManager)
+        public void Configure(IConfiguration configuration, IApplicationBuilder app, IWebHostEnvironment env, RoleManager<Role> roleManager)
         {
             if (env.IsDevelopment())
             {

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.TagHelpers.Cache;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SPM.Web.Data;
 using SPM.Web.Models;
 using SPM.Web.Models.ViewModels;
@@ -29,17 +30,20 @@ namespace SPM.Web.Controllers
         private readonly UserManager<User> _userManager;
         // Blob storage service
         private readonly BlobStorageService _storageService;
+        // Confirgation
+        private readonly IConfiguration _configuration;
 
         /// <summary>
         /// User manager constructor
         /// </summary>
         /// <param name="context">Database context</param>
         /// <param name="userManager">User manager</param>
-        public UserController(ApplicationDbContext context, UserManager<User> userManager)
+        public UserController(ApplicationDbContext context, UserManager<User> userManager, IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
-            _storageService = new BlobStorageService(_context);
+            _configuration = configuration;
+            _storageService = new BlobStorageService(_configuration);
         }
 
         /// <summary>
@@ -95,16 +99,13 @@ namespace SPM.Web.Controllers
             team.CreatorId = creator;
             team.Created = DateTime.Now;
 
-            // Create instance of the storage service
-            var storageService = new BlobStorageService(_context);
-
             // Check if form image was null, only need to do checks
             // and upload if it is not null
             if (team.FormImage != null)
             {
 
                 // Upload the image and get the url result and assign it to the team image field
-                team.Image = await storageService.UploadFile(team.FormImage);
+                team.Image = await _storageService.UploadFile(team.FormImage);
 
                 // Check that image was uploaded successfully
                 if (team.Image == null)
@@ -246,9 +247,15 @@ namespace SPM.Web.Controllers
             // Update data
             if (input.FormImage != null)
             {
-                // todo delete old image from azure before uploading new one
+                // Delete old image
+                await _storageService.DeleteFile(
+                    team.Image.Replace(_configuration.GetValue<string>("AzureUrl"), ""));
+
+                // Upload new image
                 team.Image = await _storageService.UploadFile(input.FormImage);
             }
+
+            // Set other fields
             team.Name = input.Name;
             team.Description = input.Description;
 
