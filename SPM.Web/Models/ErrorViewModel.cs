@@ -1,5 +1,3 @@
-using System;
-
 namespace SPM.Web.Models
 {
     public class ErrorViewModel

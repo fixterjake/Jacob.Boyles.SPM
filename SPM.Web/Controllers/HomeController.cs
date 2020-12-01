@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SPM.Web.Data;
 using SPM.Web.Models;
 
@@ -15,11 +10,12 @@ namespace SPM.Web.Controllers
     {
         // Database context
         private readonly ApplicationDbContext _context;
+
         // Signin manager
         private readonly SignInManager<User> _signInManager;
 
         /// <summary>
-        /// Constructor to init database context and signin manager
+        ///     Constructor to init database context and signin manager
         /// </summary>
         /// <param name="context">Database context</param>
         /// <param name="signInManager">Signin manager</param>
@@ -30,21 +26,18 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show index view
+        ///     Function to show index view
         /// </summary>
         /// <returns>Index view</returns>
         public IActionResult Index()
         {
-            if (_signInManager.IsSignedIn(User))
-            {
-                Redirect("/user");
-            }
+            if (_signInManager.IsSignedIn(User)) Redirect("/user");
 
             return View();
         }
 
         /// <summary>
-        /// Function to show privacy view
+        ///     Function to show privacy view
         /// </summary>
         /// <returns>Privacy view</returns>
         public IActionResult Privacy()
@@ -53,13 +46,13 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        /// Function to show error view
+        ///     Function to show error view
         /// </summary>
         /// <returns>Error view</returns>
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
     }
 }

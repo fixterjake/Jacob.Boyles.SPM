@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Quartz;
 using SPM.Web.Models;
@@ -12,7 +11,7 @@ namespace SPM.Web.Data.Jobs
         private ApplicationDbContext _context;
 
         /// <summary>
-        /// Function implemented from Quartz.Net to execute the job
+        ///     Function implemented from Quartz.Net to execute the job
         /// </summary>
         /// <param name="context">Database context</param>
         public async Task Execute(IJobExecutionContext context)
@@ -21,14 +20,14 @@ namespace SPM.Web.Data.Jobs
             var schedulerContext = context.Scheduler.Context;
 
             // Pull the database context object from the scheduler context
-            _context = (ApplicationDbContext)schedulerContext.Get("context");
+            _context = (ApplicationDbContext) schedulerContext.Get("context");
 
             // Run the handle sprint dates function asynchronously
             await HandleSprintDates();
         }
 
         /// <summary>
-        /// Function to handle the checking of sprint status based on dates
+        ///     Function to handle the checking of sprint status based on dates
         /// </summary>
         public async Task HandleSprintDates()
         {
@@ -42,17 +41,13 @@ namespace SPM.Web.Data.Jobs
             {
                 // If sprint is inactive & start date has passed
                 if (sprint.Status == SprintStatus.Inactive && CheckStart(sprint))
-                {
                     // Set sprint to active
                     sprint.Status = SprintStatus.Active;
-                }
 
                 // If sprint is active & end date has passed
                 if (sprint.Status == SprintStatus.Active && CheckEnd(sprint))
-                {
                     // Set sprint to extended
                     sprint.Status = SprintStatus.Extended;
-                }
 
                 // Save database changes
                 await _context.SaveChangesAsync();
@@ -60,7 +55,7 @@ namespace SPM.Web.Data.Jobs
         }
 
         /// <summary>
-        /// Check if the sprint should be started
+        ///     Check if the sprint should be started
         /// </summary>
         /// <param name="sprint">Sprint to check</param>
         /// <returns>Boolean indicating if sprint should be started</returns>
@@ -70,7 +65,7 @@ namespace SPM.Web.Data.Jobs
         }
 
         /// <summary>
-        /// Check if sprint should be extended
+        ///     Check if sprint should be extended
         /// </summary>
         /// <param name="sprint">Sprint to check</param>
         /// <returns>Boolean indicating if sprint should be extended</returns>

@@ -1,13 +1,7 @@
-﻿using Azure.Storage.Blobs;
-using Microsoft.AspNetCore.Http;
-using SPM.Web.Data;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
+﻿using System;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace SPM.Web.Services
@@ -24,8 +18,8 @@ namespace SPM.Web.Services
         }
 
         /// <summary>
-        /// Function to upload a file to an azure blob storage container
-        /// and return the url for saving in the database
+        ///     Function to upload a file to an azure blob storage container
+        ///     and return the url for saving in the database
         /// </summary>
         /// <param name="file">The file uploaded via the form</param>
         /// <returns>String of the url</returns>
