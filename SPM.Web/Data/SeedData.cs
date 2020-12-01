@@ -30,12 +30,7 @@ namespace SPM.Web.Data
                     await context.Settings.AddAsync(new Settings
                     {
                         Name = "AzureConnectionString"
-                    });
-
-                    await context.Settings.AddAsync(new Settings
-                    {
-                        Name = "SendgridKey"
-                    });
+                    }); ;
 
                     // Save database changes
                     await context.SaveChangesAsync();

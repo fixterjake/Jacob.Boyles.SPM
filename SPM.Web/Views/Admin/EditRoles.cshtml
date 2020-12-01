@@ -1,0 +1,88 @@
+﻿@model SPM.Web.Models.ViewModels.Role
+
+@{
+    Layout = "UserLayout";
+    ViewData["Title"] = "Edit Roles";
+}
+
+<div class="container rounded box-shadow border border-dark"
+     style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+    <h3 class="text-center" style="padding-bottom: 20px;">
+        Add User To Role
+    </h3>
+
+    <br />
+
+    <form asp-controller="Admin" asp-action="EditRoles">
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="UserId"></label>
+                    <select class="form-control" asp-for="UserId">
+                        <option aria-readonly="true" selected="selected">Select One</option>
+                        @foreach (var user in ViewBag.users)
+                        {
+                            <option value="@user.Id">@user.UserName</option>
+                        }
+                    </select>
+                    <span asp-validation-for="UserId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    <label asp-for="RoleId"></label>
+                    <select class="form-control" asp-for="RoleId">
+                        <option aria-readonly="true" selected="selected">Select One</option>
+                        @foreach (var role in ViewBag.roles)
+                        {
+                            <option value="@role.Id">@role.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (ViewBag.userRoles.Count > 0)
+{
+    <div class="container rounded box-shadow border border-dark"
+         style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px;">
+        <h3 class="text-center" style="padding-bottom: 20px;">
+            Edit Current Users
+        </h3>
+
+        <br />
+
+        <table class="table table-borderless table-responsive-sm">
+            <thead>
+                <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var userRole in ViewBag.userRoles)
+                {
+                    <tr>
+                        <td>@userRole.User.UserName</td>
+                        <td>@userRole.RoleName</td>
+                        <td>
+                            <a asp-action="RemoveFromRole" asp-route-roleId="@userRole.RoleId" asp-route-userId="@userRole.User.Id"
+                               data-toggle="tooltip" title="Remove From Role">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
