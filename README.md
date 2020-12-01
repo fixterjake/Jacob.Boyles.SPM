@@ -28,6 +28,7 @@ Relational Database: [MySQL Server](https://dev.mysql.com/downloads/mysql/).
 - MySQL
 - Dotnet 5 SDK
 - Entity framework Dotnet CLI tool
+- AWS credentials, find out more [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
 
 ## Deployment
 1. Clone the repository from github
