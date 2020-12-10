@@ -46,15 +46,6 @@ namespace SPM.Web.Controllers
         }
 
         /// <summary>
-        ///     Function to show privacy view
-        /// </summary>
-        /// <returns>Privacy view</returns>
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        /// <summary>
         ///     Function to show error view
         /// </summary>
         /// <returns>Error view</returns>
