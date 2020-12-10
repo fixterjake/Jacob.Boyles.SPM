@@ -535,7 +535,7 @@ namespace SPM.Web.Controllers
         /// <param name="id">Id of item to edit</param>
         [HttpPost]
         [Authorize(Roles = "Administrator,Maintainer")]
-        public async Task<IActionResult> EditItem([Bind("Name,Description")] Item input, int id)
+        public async Task<IActionResult> EditItem([Bind("Name,Description,Status")] Item input, int id)
         {
             // Ensure data is valid
             if (!ModelState.IsValid) return View();
@@ -553,6 +553,7 @@ namespace SPM.Web.Controllers
             // Update data
             item.Name = input.Name;
             item.Description = input.Description;
+            item.Status = input.Status;
 
             // Save changed
             await _context.SaveChangesAsync();
